@@ -16,9 +16,9 @@ making it ideal for handling complex data structures efficiently.
 
 - [Installation](#installation)
 - [Usage](#usage)
-    - [getPathInfo](#getpathinfo)
     - [getPathValue](#getpathvalue)
     - [setPathValue](#setpathvalue)
+    - [getPathInfo](#getpathinfo)
 - [License](#license)
 
 ## Installation
@@ -29,112 +29,6 @@ npm install pathtrace --save
 
 ## Usage
 The following examples demonstrate how to use the library.
-
-### getPathInfo
-
-This method returns an object with information indicating the value 
-of the `parent` of that path, the `name` of the property being retrieved,
-and its `value`.
-
-```ts
-const obj = {
-    user: {
-        name: 'Alice',
-        roles: ['admin', 'editor'],
-        contact: {
-            email: 'alice@example.com',
-            phone: '123-456-7890',
-        },
-    },
-    'user.roles': {
-        '[1]': 'editor',
-    },
-};
-```
-
-**Example 1: Handling a nested property**
-
-```ts
-import { getPathInfo } from 'pathtrace';
-
-const info = getPathInfo(obj, 'user.contact.email');
-
-if (info.parent) {
-    console.log(info.parent.name); // 'contact'
-    console.log(info.parent.value); 
-    // { email: 'alice@example.com', phone: '123-456-7890' }
-    console.log(info.parent.exists); // true
-}
-console.log(info.value); // 'alice@example.com'
-console.log(info.exists); // true
-console.log(info.name); // 'email'
-
-```
-**Example 2: Handling an array index**
-
-```ts
-import { getPathInfo } from 'pathtrace';
-
-const info = getPathInfo(obj, 'user.roles[1]');
-
-if (info.parent) {
-    console.log(info.parent.name); // 'roles'
-    console.log(info.parent.value); // ['admin', 'editor']
-    console.log(info.parent.exists); // true
-}
-console.log(info.value); // 'editor'
-console.log(info.name); // '1'
-console.log(info.exists); // true
-```
-
-**Example 3: Handling a non-existent property**
-```ts
-import { getPathInfo } from 'pathtrace';
-
-const info = getPathInfo(obj, 'user.contact.address');
-
-if (info.parent) {
-    console.log(info.parent.name); // 'contact'
-    console.log(info.parent.value); 
-    // { email: 'alice@example.com', phone: '123-456-7890' }
-    console.log(info.parent.exists); // true
-}
-console.log(info.value); // undefined
-console.log(info.name); // 'address'
-console.log(info.exists); // false
-```
-
-**Example 4: Handling an out-of-bounds array index**
-```ts
-import { getPathInfo } from 'pathtrace';
-
-const info = getPathInfo(obj, 'user.roles[5]');
-
-if (info.parent) {
-    console.log(info.parent.name); // 'roles'
-    console.log(info.parent.value); // ['admin', 'editor']
-    console.log(info.parent.exists); // true
-}
-console.log(info.value); // undefined
-console.log(info.name); // '5'
-console.log(info.exists); // false
-```
-
-**Example 5: Handling backslash-escaping for . and []**
-```ts
-import { getPathInfo } from 'pathtrace';
-
-const info = getPathInfo(obj, 'user\\.roles.\\[1\\]');
-
-if (info.parent) {
-    console.log(info.parent.name); // '[1]'
-    console.log(info.parent.value); // 'editor'
-    console.log(info.exists); // true
-}
-console.log(info.value); // 'editor'
-console.log(info.name); // '1'
-console.log(info.exists); // true
-```
 
 ### getPathValue
 
@@ -317,6 +211,113 @@ import { setPathValue } from 'pathtrace';
 
 var modifiedObj = setPathValue(obj, 'user.contact.phone', '987-654-3210');
 console.log(modifiedObj === obj); // true
+```
+
+
+### getPathInfo
+
+This method returns an object with information indicating the value
+of the `parent` of that path, the `name` of the property being retrieved,
+and its `value`.
+
+```ts
+const obj = {
+    user: {
+        name: 'Alice',
+        roles: ['admin', 'editor'],
+        contact: {
+            email: 'alice@example.com',
+            phone: '123-456-7890',
+        },
+    },
+    'user.roles': {
+        '[1]': 'editor',
+    },
+};
+```
+
+**Example 1: Handling a nested property**
+
+```ts
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user.contact.email');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'contact'
+    console.log(info.parent.value); 
+    // { email: 'alice@example.com', phone: '123-456-7890' }
+    console.log(info.parent.exists); // true
+}
+console.log(info.value); // 'alice@example.com'
+console.log(info.exists); // true
+console.log(info.name); // 'email'
+
+```
+**Example 2: Handling an array index**
+
+```ts
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user.roles[1]');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'roles'
+    console.log(info.parent.value); // ['admin', 'editor']
+    console.log(info.parent.exists); // true
+}
+console.log(info.value); // 'editor'
+console.log(info.name); // '1'
+console.log(info.exists); // true
+```
+
+**Example 3: Handling a non-existent property**
+```ts
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user.contact.address');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'contact'
+    console.log(info.parent.value); 
+    // { email: 'alice@example.com', phone: '123-456-7890' }
+    console.log(info.parent.exists); // true
+}
+console.log(info.value); // undefined
+console.log(info.name); // 'address'
+console.log(info.exists); // false
+```
+
+**Example 4: Handling an out-of-bounds array index**
+```ts
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user.roles[5]');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'roles'
+    console.log(info.parent.value); // ['admin', 'editor']
+    console.log(info.parent.exists); // true
+}
+console.log(info.value); // undefined
+console.log(info.name); // '5'
+console.log(info.exists); // false
+```
+
+**Example 5: Handling backslash-escaping for . and []**
+```ts
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user\\.roles.\\[1\\]');
+
+if (info.parent) {
+    console.log(info.parent.name); // '[1]'
+    console.log(info.parent.value); // 'editor'
+    console.log(info.exists); // true
+}
+console.log(info.value); // 'editor'
+console.log(info.name); // '1'
+console.log(info.exists); // true
 ```
 
 ## License
