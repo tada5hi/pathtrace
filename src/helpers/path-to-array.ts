@@ -5,7 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export const BRACKET_NUMBER_REGEX = /^\[(\d+)]$/;
+export const BRACKET_NUMBER_REGEX = /(?<!\\)\[(\d+)]$/;
 
 /**
  * Convert string to property path array.

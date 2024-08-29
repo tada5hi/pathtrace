@@ -14,7 +14,7 @@ describe('array-to-path', () => {
         ['trailing numeric segment', ['foo', '0'], 'foo[0]'],
         ['numeric segment between text segments', ['foo', '0', 'bar'], 'foo[0].bar'],
         ['numeric segment followed by numeric segment', ['foo', '0', '0'], 'foo[0][0]'],
-        ['text segment with a dot', ['foo', '.bar'], 'foo\\.bar'],
+        ['text segment with a dot', ['foo', '.bar'], 'foo.\\.bar'],
     ])('%s', (_name, input, expected) => {
         expect(arrayToPath(input)).toBe(expected);
     });

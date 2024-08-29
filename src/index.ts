@@ -10,4 +10,3 @@ export * from './helpers';
 export * from './get-path-value';
 export * from './get-path-info';
 export * from './set-path-value';
-export * from './types';

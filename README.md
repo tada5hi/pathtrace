@@ -57,67 +57,67 @@ const obj = {
 ```ts
 import { getPathInfo } from 'pathtrace';
 
-const info = getPathInfo(
-    obj,
-    'user.contact.email'
-);
-console.log(info);
-/*
-{
-parent: { email: 'alice@example.com', phone: '123-456-7890' },
-name: 'email',
-value: 'alice@example.com',
-exists: true
+const info = getPathInfo(obj, 'user.contact.email');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'contact'
+    console.log(info.parent.value); 
+    // { email: 'alice@example.com', phone: '123-456-7890' }
+    console.log(info.parent.exists); // true
 }
- */
+console.log(info.value); // 'alice@example.com'
+console.log(info.exists); // true
+console.log(info.name); // 'email'
+
 ```
 **Example 2: Handling an array index**
 
 ```ts
 import { getPathInfo } from 'pathtrace';
 
-const info = getPathInfo(obj, 'user.roles[0]');
-console.log(info);
-/*
-{
-parent: ['admin', 'editor'],
-name: '0',
-value: 'admin',
-exists: true
+const info = getPathInfo(obj, 'user.roles[1]');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'roles'
+    console.log(info.parent.value); // ['admin', 'editor']
+    console.log(info.parent.exists); // true
 }
-*/
+console.log(info.value); // 'editor'
+console.log(info.name); // '1'
+console.log(info.exists); // true
 ```
 
 **Example 3: Handling a non-existent property**
 ```ts
 import { getPathInfo } from 'pathtrace';
 
-const info = getPathInfo(obj, 'user.address');
-console.log(info);
-/*
-{
-parent: { name: 'Alice', roles: ['admin', 'editor'], contact: { email: 'alice@example.com', phone: '123-456-7890' } },
-name: 'address',
-value: undefined,
-exists: false
+const info = getPathInfo(obj, 'user.contact.address');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'contact'
+    console.log(info.parent.value); 
+    // { email: 'alice@example.com', phone: '123-456-7890' }
+    console.log(info.parent.exists); // true
 }
-*/
+console.log(info.value); // undefined
+console.log(info.name); // 'address'
+console.log(info.exists); // false
 ```
 
 **Example 4: Handling an out-of-bounds array index**
 ```ts
 import { getPathInfo } from 'pathtrace';
 
-const info = getPathInfo(obj, 'user.roles[3]');
-console.log(info);
-/*
-{
-parent: ['admin', 'editor'],
-name: '3',
-value: undefined,
-exists: false
+const info = getPathInfo(obj, 'user.roles[5]');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'roles'
+    console.log(info.parent.value); // ['admin', 'editor']
+    console.log(info.parent.exists); // true
 }
-*/
+console.log(info.value); // undefined
+console.log(info.name); // '5'
+console.log(info.exists); // false
 ```
 
 **Example 5: Handling backslash-escaping for . and []**
@@ -125,15 +125,15 @@ exists: false
 import { getPathInfo } from 'pathtrace';
 
 const info = getPathInfo(obj, 'user\\.roles.\\[1\\]');
-console.log(info);
-/*
-{
-parent: { '[1]': 'editor' },
-name: '1',
-value: 'editor',
-exists: true
+
+if (info.parent) {
+    console.log(info.parent.name); // '[1]'
+    console.log(info.parent.value); // 'editor'
+    console.log(info.exists); // true
 }
-*/
+console.log(info.value); // 'editor'
+console.log(info.name); // '1'
+console.log(info.exists); // true
 ```
 
 ### getPathValue

@@ -14,10 +14,10 @@ export function arrayToPath(parts: readonly string[]) : string {
         let part = '';
         segment = segment === '\\*' ? '*' : segment;
 
-        if (segment.includes('.')) {
-            // Special char key access
-            part = segment.replace(/\./g, '\\.');
-        } else if (/^\d+$/.test(segment)) {
+        segment = segment.replace(/^\[(\d+)]$/g, '\\[$1]');
+        segment = segment.replace(/\./g, '\\.');
+
+        if (/^\d+$/.test(segment)) {
             // Index access
             part = `[${segment}]`;
         } else if (prev) {
