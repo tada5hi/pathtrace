@@ -12,7 +12,6 @@
 export function arrayToPath(parts: readonly string[]) : string {
     return parts.reduce((prev, segment) => {
         let part = '';
-        segment = segment === '\\*' ? '*' : segment;
 
         segment = segment.replace(/^\[(\d+)]$/g, '\\[$1]');
         segment = segment.replace(/\./g, '\\.');
