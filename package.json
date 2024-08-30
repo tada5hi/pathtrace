@@ -25,9 +25,6 @@
         "lint": "eslint --ext .js,.vue,.ts ./src ./test",
         "lint:fix": "npm run lint -- --fix"
     },
-    "bin": {
-        "authup": "dist/index.cjs"
-    },
     "keywords": [
         "nested-objects",
         "path",
