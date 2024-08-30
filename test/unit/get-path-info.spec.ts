@@ -133,7 +133,7 @@ describe('getPathInfo', () => {
     });
 
     it('should not get parent', () => {
-        const info = getPathInfo(obj);
+        const info = getPathInfo(obj, []);
 
         expect(info.parent).toEqual(null);
         expect(info.value).toEqual(obj);

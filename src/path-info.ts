@@ -6,12 +6,10 @@
  */
 
 import { getPathValue } from './get-path-value';
-import { arrayToPath, pathToArray } from './helpers';
+import { pathToArray } from './helpers';
 
 export class PathInfo {
     protected data: unknown;
-
-    protected path : string | undefined;
 
     protected pathParts: string[];
 
@@ -21,12 +19,14 @@ export class PathInfo {
 
     protected _exists: boolean | undefined;
 
-    constructor(data: unknown, path?: string) {
+    constructor(data: unknown, path: string | string[]) {
         this.data = data;
-        this.path = path;
-        this.pathParts = this.path ?
-            pathToArray(this.path) :
-            [];
+
+        if (Array.isArray(path)) {
+            this.pathParts = path;
+        } else {
+            this.pathParts = pathToArray(path);
+        }
     }
 
     get value() {
@@ -62,13 +62,12 @@ export class PathInfo {
         }
 
         if (this.pathParts.length > 1) {
-            const parentPathParts = this.pathParts.slice(0, this.pathParts.length - 1);
             this._parent = new PathInfo(
                 this.data,
-                arrayToPath(parentPathParts),
+                this.pathParts.slice(0, this.pathParts.length - 1),
             );
         } else {
-            this._parent = new PathInfo(this.data);
+            this._parent = new PathInfo(this.data, []);
         }
 
         return this._parent;

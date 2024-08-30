@@ -6,10 +6,10 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 
 **Pathtrace** is a library for managing nested objects and arrays. 
-It offers straightforward methods for 
-retrieving ([getPathValue](#getPathValue)) and
-setting ([setPathValue](#setPathValue)) values at any path.
-Additionally, [getPathInfo](#getPathInfo) provides detailed path information, 
+It offers straightforward methods for retrieving ([getPathValue](#getpathvalue)) and
+setting ([setPathValue](#setpathvalue)) values at any path. 
+Additionally, [getPathInfo](#getpathinfo) provides detailed path information, 
+and the [expandPath](#expandpath) helper allows for querying and expanding paths with wildcards and globstars,
 making it ideal for handling complex data structures efficiently.
 
 **Table of Contents**
@@ -18,6 +18,7 @@ making it ideal for handling complex data structures efficiently.
 - [Usage](#usage)
     - [getPathValue](#getpathvalue)
     - [setPathValue](#setpathvalue)
+    - [expandPath](#expandpath)
     - [getPathInfo](#getpathinfo)
 - [License](#license)
 
@@ -213,6 +214,52 @@ var modifiedObj = setPathValue(obj, 'user.contact.phone', '987-654-3210');
 console.log(modifiedObj === obj); // true
 ```
 
+### expandPath
+
+The expandPath function takes an object and a string representing a path, 
+potentially containing wildcards (`*`) and globstars (`**`),
+and returns an array of all possible matching paths within the object.
+
+**Example: Wildcard (`*`) - Select all shallow paths of an array**
+```ts
+import { expandPath } from 'pathtrace';
+
+const obj = {
+    foo: ['bar', 'baz'],
+};
+const paths = expandPath(obj, 'foo.*');
+console.log(paths); // ['foo[0]', 'foo[1]']
+```
+
+**Example: Wildcard (`*`) - Select matching paths under a wildcard branch**
+
+```ts
+import { expandPath } from 'pathtrace';
+
+const obj = { foo: { bar: { a: true }, baz: { a: false, b: 1 } } };
+const paths = expandPath(obj, 'foo.*.a');
+console.log(paths); // ['foo.bar.a', 'foo.baz.a']
+```
+
+**Example: Globstar (`**`) - Select all leaves that match a leaf globstar**
+
+```ts
+import { expandPath } from 'pathtrace';
+
+const obj = { foo: { a: { b: { c: 1 } }, d: { e: 2 } } };
+const paths = expandPath(obj, 'foo.**');
+console.log(paths); // ['foo.a.b.c', 'foo.d.e']
+```
+
+**Example: Globstar (`**`) - Select deeply nested matching paths under a globstar branch**
+
+```ts
+import { expandPath } from 'pathtrace';
+
+const obj = { foo: { a: { b: { bar: 1 } }, c: { bar: 2 } } };
+const paths = expandPath(obj, 'foo.**.bar');
+console.log(paths); // ['foo.a.b.bar', 'foo.c.bar']
+```
 
 ### getPathInfo
 
