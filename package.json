@@ -26,11 +26,13 @@
         "lint:fix": "npm run lint -- --fix"
     },
     "keywords": [
-        "nested-objects",
         "path",
-        "path-retrival",
-        "javascript",
         "path-info",
+        "path-value",
+        "expand-path",
+        "path-retrival",
+        "get-path",
+        "nested-objects",
         "deep-access"
     ],
     "author": {
