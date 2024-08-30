@@ -1,6 +1,7 @@
 # pathtrace 🔍
 
 [![npm version](https://badge.fury.io/js/pathtrace.svg)](https://badge.fury.io/js/pathtrace)
+[![codecov](https://codecov.io/gh/tada5hi/pathtrace/graph/badge.svg?token=VIP3G2QT16)](https://codecov.io/gh/tada5hi/pathtrace)
 [![main](https://github.com/tada5hi/pathtrace/actions/workflows/main.yml/badge.svg)](https://github.com/tada5hi/pathtrace/actions/workflows/main.yml)
 [![Known Vulnerabilities](https://snyk.io/test/github/tada5hi/pathtrace/badge.svg)](https://snyk.io/test/github/tada5hi/pathtrace)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
