@@ -6,10 +6,10 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 
 **Pathtrace** is a library for managing nested objects and arrays. 
-It offers straightforward methods for 
-retrieving ([getPathValue](#getPathValue)) and
-setting ([setPathValue](#setPathValue)) values at any path.
-Additionally, [getPathInfo](#getPathInfo) provides detailed path information, 
+It offers straightforward methods for retrieving ([getPathValue](#getpathvalue)) and
+setting ([setPathValue](#setpathvalue)) values at any path. 
+Additionally, [getPathInfo](#getpathinfo) provides detailed path information, 
+and the [expandPath](#expandpath) helper allows for querying and expanding paths with wildcards and globstars,
 making it ideal for handling complex data structures efficiently.
 
 **Table of Contents**
@@ -18,8 +18,8 @@ making it ideal for handling complex data structures efficiently.
 - [Usage](#usage)
     - [getPathValue](#getpathvalue)
     - [setPathValue](#setpathvalue)
-    - [getPathInfo](#getpathinfo)
     - [expandPath](#expandpath)
+    - [getPathInfo](#getpathinfo)
 - [License](#license)
 
 ## Installation
