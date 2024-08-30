@@ -11,7 +11,9 @@ export function getPathValue(
     data: unknown,
     path: string | string[],
 ): unknown {
-    const parts = Array.isArray(path) ? path : pathToArray(path);
+    const parts = Array.isArray(path) ?
+        path :
+        pathToArray(path);
 
     let res : unknown | undefined;
     let temp = data;

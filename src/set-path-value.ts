@@ -15,7 +15,9 @@ export function setPathValue(
     path: string | string[],
     value: unknown,
 ) {
-    const parts = Array.isArray(path) ? path : pathToArray(path);
+    const parts = Array.isArray(path) ?
+        path :
+        pathToArray(path);
 
     let temp = data;
     let index = 0;
