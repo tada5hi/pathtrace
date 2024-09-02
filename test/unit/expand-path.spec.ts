@@ -5,7 +5,8 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { expandPath } from '../../src';
+import type { ExpandedPath } from '../../src';
+import { expandPath, expandPathVerbose } from '../../src';
 
 describe('expandPath', () => {
     describe('wildcard (*)', () => {
@@ -13,48 +14,56 @@ describe('expandPath', () => {
             const obj = {
                 foo: ['bar', 'baz'],
             };
-            const paths = expandPath(obj, 'foo.*');
+            const paths = expandPathVerbose(obj, 'foo.*');
             expect(paths).toEqual([
-                'foo[0]',
-                'foo[1]',
-            ]);
+                { value: 'foo[0]', matches: ['0'] },
+                { value: 'foo[1]', matches: ['1'] },
+            ] satisfies ExpandedPath[]);
+        });
+
+        it('should select all shallow paths (simple)', () => {
+            const obj = {
+                foo: ['bar', 'baz'],
+            };
+            const paths = expandPath(obj, 'foo.*');
+            expect(paths).toEqual(['foo[0]', 'foo[1]']);
         });
 
         it('should select all shallow paths when path is just the wildcard', () => {
             const obj = ['bar', 'baz'];
-            const paths = expandPath(obj, '*');
+            const paths = expandPathVerbose(obj, '*');
             expect(paths).toEqual([
-                '[0]',
-                '[1]',
-            ]);
+                { value: '[0]', matches: ['0'] },
+                { value: '[1]', matches: ['1'] },
+            ] satisfies ExpandedPath[]);
         });
 
         it('should select key if it is a wildcard', () => {
             const obj = { '*': 'foo' };
-            const paths = expandPath(obj, '*');
+            const paths = expandPathVerbose(obj, '*');
 
             expect(paths).toEqual([
-                '*',
-            ]);
+                { value: '*', matches: ['*'] },
+            ] satisfies ExpandedPath[]);
         });
 
         it('should select matching paths under a wildcard branch', () => {
             const obj = { foo: { bar: { a: true }, baz: { a: false, b: 1 } } };
-            const paths = expandPath(obj, 'foo.*.a');
+            const paths = expandPathVerbose(obj, 'foo.*.a');
             expect(paths).toEqual([
-                'foo.bar.a',
-                'foo.baz.a',
-            ]);
+                { value: 'foo.bar.a', matches: ['bar'] },
+                { value: 'foo.baz.a', matches: ['baz'] },
+            ] satisfies ExpandedPath[]);
         });
 
         it('should expand paths matching multiple wildcards', () => {
             const obj = { foo: { bar: { a: true }, baz: { b: 1 } } };
-            const paths = expandPath(obj, 'foo.*.*');
+            const paths = expandPathVerbose(obj, 'foo.*.*');
 
             expect(paths).toEqual([
-                'foo.bar.a',
-                'foo.baz.b',
-            ]);
+                { value: 'foo.bar.a', matches: ['bar', 'a'] },
+                { value: 'foo.baz.b', matches: ['baz', 'b'] },
+            ] satisfies ExpandedPath[]);
         });
 
         it('should not expand path if wildcard position does not exist', () => {
@@ -68,41 +77,41 @@ describe('expandPath', () => {
     describe('globstar (**)', () => {
         it('should select all leaves that match a leaf globstar', () => {
             const obj = { foo: { a: { b: { c: 1 } }, d: { e: 2 } } };
-            const paths = expandPath(obj, 'foo.**');
+            const paths = expandPathVerbose(obj, 'foo.**');
 
             expect(paths).toEqual([
-                'foo.a.b.c',
-                'foo.d.e',
-            ]);
+                { value: 'foo.a.b.c', matches: [['a', 'b', 'c']] },
+                { value: 'foo.d.e', matches: [['d', 'e']] },
+            ] satisfies ExpandedPath[]);
         });
 
         it('should select deeply nested matching paths under a globstar branch', () => {
             const obj = { foo: { a: { b: { bar: 1 } }, c: { bar: 2 } } };
-            const paths = expandPath(obj, 'foo.**.bar');
+            const paths = expandPathVerbose(obj, 'foo.**.bar');
 
             expect(paths).toEqual([
-                'foo.a.b.bar',
-                'foo.c.bar',
-            ]);
+                { value: 'foo.a.b.bar', matches: [['a', 'b']] },
+                { value: 'foo.c.bar', matches: [['c']] },
+            ] satisfies ExpandedPath[]);
         });
 
         it('should select branch and leaf when both match a globstar selector', () => {
             const obj = { foo: { foo: 1 } };
-            const paths = expandPath(obj, '**.foo');
+            const paths = expandPathVerbose(obj, '**.foo');
 
             expect(paths).toEqual([
-                'foo.foo',
-                'foo',
-            ]);
+                { value: 'foo.foo', matches: [['foo']] },
+                { value: 'foo', matches: [] },
+            ] satisfies ExpandedPath[]);
         });
 
         it('should select key if it is a globstar', () => {
             const obj = { '**': 'foo' };
-            const paths = expandPath(obj, '**');
+            const paths = expandPathVerbose(obj, '**');
 
             expect(paths).toEqual([
-                '**',
-            ]);
+                { value: '**', matches: [['**']] },
+            ] satisfies ExpandedPath[]);
         });
     });
 });

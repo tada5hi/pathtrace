@@ -5,8 +5,11 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export * from './helpers';
+import { PathInfo } from './module';
 
-export * from './path-expand';
-export * from './path-value';
-export * from './path-info';
+export function getPathInfo(
+    data: Record<string, any>,
+    path: string | string[],
+) : PathInfo {
+    return new PathInfo(data, path);
+}

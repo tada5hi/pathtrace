@@ -5,8 +5,5 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export * from './helpers';
-
-export * from './path-expand';
-export * from './path-value';
-export * from './path-info';
+export * from './get';
+export * from './set';

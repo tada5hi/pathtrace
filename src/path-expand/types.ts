@@ -5,11 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { PathInfo } from './path-info';
-
-export function getPathInfo(
-    data: Record<string, any>,
-    path: string | string[],
-) : PathInfo {
-    return new PathInfo(data, path);
-}
+export type ExpandedPath = {
+    value: string,
+    matches: readonly (string | string[])[]
+};
