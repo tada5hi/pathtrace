@@ -5,7 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export type ExpandedPath = {
+export type PathExpanded = {
     value: string,
     matches: readonly (string | string[])[]
 };

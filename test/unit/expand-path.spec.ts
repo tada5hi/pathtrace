@@ -5,7 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import type { ExpandedPath } from '../../src';
+import type { PathExpanded } from '../../src';
 import { expandPath, expandPathVerbose } from '../../src';
 
 describe('expandPath', () => {
@@ -18,7 +18,7 @@ describe('expandPath', () => {
             expect(paths).toEqual([
                 { value: 'foo[0]', matches: ['0'] },
                 { value: 'foo[1]', matches: ['1'] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
 
         it('should select all shallow paths (simple)', () => {
@@ -35,7 +35,7 @@ describe('expandPath', () => {
             expect(paths).toEqual([
                 { value: '[0]', matches: ['0'] },
                 { value: '[1]', matches: ['1'] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
 
         it('should select key if it is a wildcard', () => {
@@ -44,7 +44,7 @@ describe('expandPath', () => {
 
             expect(paths).toEqual([
                 { value: '*', matches: ['*'] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
 
         it('should select matching paths under a wildcard branch', () => {
@@ -53,7 +53,7 @@ describe('expandPath', () => {
             expect(paths).toEqual([
                 { value: 'foo.bar.a', matches: ['bar'] },
                 { value: 'foo.baz.a', matches: ['baz'] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
 
         it('should expand paths matching multiple wildcards', () => {
@@ -63,7 +63,7 @@ describe('expandPath', () => {
             expect(paths).toEqual([
                 { value: 'foo.bar.a', matches: ['bar', 'a'] },
                 { value: 'foo.baz.b', matches: ['baz', 'b'] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
 
         it('should not expand path if wildcard position does not exist', () => {
@@ -82,7 +82,7 @@ describe('expandPath', () => {
             expect(paths).toEqual([
                 { value: 'foo.a.b.c', matches: [['a', 'b', 'c']] },
                 { value: 'foo.d.e', matches: [['d', 'e']] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
 
         it('should select deeply nested matching paths under a globstar branch', () => {
@@ -92,7 +92,7 @@ describe('expandPath', () => {
             expect(paths).toEqual([
                 { value: 'foo.a.b.bar', matches: [['a', 'b']] },
                 { value: 'foo.c.bar', matches: [['c']] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
 
         it('should select branch and leaf when both match a globstar selector', () => {
@@ -102,7 +102,7 @@ describe('expandPath', () => {
             expect(paths).toEqual([
                 { value: 'foo.foo', matches: [['foo']] },
                 { value: 'foo', matches: [] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
 
         it('should select key if it is a globstar', () => {
@@ -111,7 +111,7 @@ describe('expandPath', () => {
 
             expect(paths).toEqual([
                 { value: '**', matches: [['**']] },
-            ] satisfies ExpandedPath[]);
+            ] satisfies PathExpanded[]);
         });
     });
 });

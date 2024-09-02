@@ -6,7 +6,7 @@
  */
 
 import { Character } from './constants';
-import type { ExpandedPath } from './types';
+import type { PathExpanded } from './types';
 import { isObject } from '../utils';
 import { arrayToPath, pathToArray } from '../helpers';
 
@@ -15,7 +15,7 @@ function expandPathVerboseInternal(
     path: string | string[],
     currPath: readonly string[] = [],
     currMatches: readonly (string | string[])[] = [],
-): ExpandedPath[] {
+): PathExpanded[] {
     const segments = Array.isArray(path) ? path : pathToArray(path);
     if (!segments.length) {
         // no more paths to traverse
@@ -83,7 +83,7 @@ function expandPathVerboseInternal(
                     .concat(rest[0] === key ? expandPathVerboseInternal(value, arrayToPath(rest.slice(1)), nextPath, []) : []);
 
                 const pathMatches : string[] = [];
-                const output : ExpandedPath[] = [];
+                const output : PathExpanded[] = [];
                 for (let i = 0; i < children.length; i++) {
                     /* istanbul ignore next */
                     if (pathMatches.indexOf(children[i].value) !== -1) {
@@ -117,7 +117,7 @@ function expandPathVerboseInternal(
 export function expandPathVerbose(
     data: Record<string, any>,
     path: string | string[],
-): ExpandedPath[] {
+): PathExpanded[] {
     return expandPathVerboseInternal(data, path);
 }
 
