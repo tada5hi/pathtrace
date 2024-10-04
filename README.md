@@ -21,6 +21,7 @@ making it ideal for handling complex data structures efficiently.
     - [setPathValue](#setpathvalue)
     - [expandPath](#expandpath)
     - [getPathInfo](#getpathinfo)
+    - [removePath](#removepath)
 - [License](#license)
 
 ## Installation
@@ -366,6 +367,25 @@ if (info.parent) {
 console.log(info.value); // 'editor'
 console.log(info.name); // '1'
 console.log(info.exists); // true
+```
+
+### removePath
+
+This method removes a property by a given `path`
+inside an `object`.
+
+```ts
+import { removePath } from 'pathtrace';
+
+const obj = {
+    hello: 'universe',
+    foo: 'bar',
+};
+
+removePath(obj, 'foo');
+
+console.log(obj);
+// { hello: 'universe' }
 ```
 
 ## License

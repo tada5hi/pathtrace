@@ -10,3 +10,5 @@ export * from './helpers';
 export * from './path-expand';
 export * from './path-value';
 export * from './path-info';
+
+export * from './remove';
