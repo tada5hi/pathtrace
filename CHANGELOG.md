@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/tada5hi/pathtrace/compare/v1.0.0...v1.1.0) (2024-10-04)
+
+
+### Features
+
+* add removePath helper ([b3920f9](https://github.com/tada5hi/pathtrace/commit/b3920f9d0647df1f5deefb6cd93b88901c32c94c))
+
 # 1.0.0 (2024-09-02)
 
 
