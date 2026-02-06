@@ -120,7 +120,7 @@ function expandPathVerboseInternal(
  */
 export function expandPathVerbose(
     data: Record<string, any>,
-    path: string | string[],
+    path: PropertyKey | PropertyKey[],
 ): PathExpanded[] {
     return expandPathVerboseInternal(data, path);
 }
@@ -132,8 +132,8 @@ export function expandPathVerbose(
  * @param path
  */
 export function expandPath(
-    data: Record<string, any>,
-    path: string | string[],
+    data: Record<PropertyKey, any>,
+    path: PropertyKey | PropertyKey[],
 ): string[] {
     return expandPathVerbose(data, path)
         .map((el) => el.value);
