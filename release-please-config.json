@@ -4,7 +4,7 @@
     "bump-patch-for-minor-pre-major": true,
     "initial-version": "1.1.0",
     "packages": {
-        ".": {"component": ""}
+        ".": { }
     },
     "plugins": [],
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
