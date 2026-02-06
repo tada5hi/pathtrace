@@ -38,5 +38,5 @@ export function arrayToPath(parts: readonly PropertyKey[]) : string {
         output += current;
     }
 
-    return `${output}`;
+    return output;
 }
