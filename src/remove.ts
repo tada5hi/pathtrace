@@ -26,11 +26,19 @@ export function removePath(
 
         const key = parts[index] as keyof typeof temp;
 
-        if (typeof temp[key] === 'undefined') {
+        if (!Object.prototype.hasOwnProperty.call(temp, key)) {
             break;
         }
 
         if (index === parts.length - 1) {
+            if (Array.isArray(temp)) {
+                const tempKey = Number(key);
+                if (!Number.isNaN(tempKey)) {
+                    temp.splice(tempKey, 1);
+                    break;
+                }
+            }
+
             delete temp[key];
             break;
         }

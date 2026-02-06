@@ -20,8 +20,8 @@
         "build:types": "tsc --emitDeclarationOnly -p tsconfig.json",
         "build:js": "rollup -c",
         "build": "rimraf ./dist && cross-env NODE_ENV=production npm run build:js && npm run build:types",
-        "test": "cross-env NODE_ENV=test jest --config ./test/jest.config.js",
-        "test:coverage": "npm run test -- --coverage",
+        "test": "cross-env NODE_ENV=test vitest run",
+        "test:coverage": "cross-env NODE_ENV=test vitest run --coverage",
         "lint": "eslint --ext .js,.vue,.ts ./src ./test",
         "lint:fix": "npm run lint -- --fix"
     },
@@ -52,19 +52,18 @@
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-swc": "^0.4.0",
-        "@swc/jest": "^0.2.39",
         "@tada5hi/commitlint-config": "^1.2.7",
         "@tada5hi/eslint-config-typescript": "^1.2.18",
         "@tada5hi/tsconfig": "^0.7.0",
-        "@types/jest": "^30.0.0",
         "@types/node": "^25.2.1",
         "cross-env": "^7.0.3",
         "eslint": "^8.57.1",
         "husky": "^9.1.7",
-        "jest": "^30.2.0",
         "rollup": "^4.57.1",
         "ts-jest": "^29.4.6",
         "typescript": "^5.9.3",
+        "unplugin-swc": "^1.5.9",
+        "vitest": "^4.0.18",
         "workspaces-publish": "^1.5.0"
     }
 }

@@ -6,8 +6,8 @@
  */
 
 import resolve from '@rollup/plugin-node-resolve';
-import swc from '@rollup/plugin-swc';
-import pkg from './package.json' assert { type: 'json' };
+import swc from 'unplugin-swc';
+import pkg from './package.json' with { type: 'json' };
 
 const extensions = [
     '.js', '.cjs', '.mjs', '.jsx', '.ts', '.tsx',
@@ -29,7 +29,8 @@ export default [
             resolve({ extensions }),
 
             // Compile TypeScript/JavaScript files
-            swc()
+
+            swc.rollup(),
         ],
         output: [
             {
