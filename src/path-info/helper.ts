@@ -9,7 +9,7 @@ import { PathInfo } from './module';
 
 export function getPathInfo(
     data: Record<string, any>,
-    path: string | string[],
+    path: PropertyKey | PropertyKey[],
 ) : PathInfo {
     return new PathInfo(data, path);
 }
