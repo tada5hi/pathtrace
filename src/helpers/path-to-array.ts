@@ -15,14 +15,22 @@ export const BRACKET_NUMBER_REGEX = /(?<!\\)\[(\d+)]$/;
  *
  * @param segment
  */
-export function pathToArray(segment: string) : string[] {
+export function pathToArray(segment: PropertyKey) : PropertyKey[] {
+    if (typeof segment === 'number') {
+        return [segment];
+    }
+
+    if (typeof segment === 'symbol') {
+        return [];
+    }
+
     const str = segment.replace(/([^\\])\[/g, '$1.[');
     const parts = str.match(/(\\\.|[^.]+?)+/g);
     if (!parts) {
         return [];
     }
 
-    const result : string[] = [];
+    const result : PropertyKey[] = [];
 
     for (let i = 0; i < parts.length; i++) {
         if (
@@ -35,7 +43,7 @@ export function pathToArray(segment: string) : string[] {
 
         const regex = BRACKET_NUMBER_REGEX.exec(parts[i]);
         if (regex) {
-            result.push(regex[1]);
+            result.push(Number(regex[1]));
         } else {
             result.push(parts[i].replace(/\\([.[\]])/g, '$1'));
         }

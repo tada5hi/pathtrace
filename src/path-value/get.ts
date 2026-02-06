@@ -9,7 +9,7 @@ import { pathToArray } from '../helpers';
 
 export function getPathValue(
     data: unknown,
-    path: string | string[],
+    path: PropertyKey | PropertyKey[],
 ): unknown {
     const parts = Array.isArray(path) ?
         path :

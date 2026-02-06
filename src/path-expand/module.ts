@@ -12,8 +12,8 @@ import { arrayToPath, pathToArray } from '../helpers';
 
 function expandPathVerboseInternal(
     data: Record<string, any>,
-    path: string | string[],
-    currPath: readonly string[] = [],
+    path: PropertyKey | PropertyKey[],
+    currPath: readonly PropertyKey[] = [],
     currMatches: readonly (string | string[])[] = [],
 ): PathExpanded[] {
     const segments = Array.isArray(path) ? path : pathToArray(path);
@@ -28,6 +28,10 @@ function expandPathVerboseInternal(
     }
 
     const key = segments[0];
+    if (typeof key === 'symbol') {
+        return [];
+    }
+
     const rest = segments.slice(1);
 
     if (

@@ -9,24 +9,34 @@
  * @see https://github.com/express-validator/express-validator/blob/bec1dcbaa29002dcd21093ec84818c4671063b5d/src/field-selection.ts#L214
  * @param parts
  */
-export function arrayToPath(parts: readonly string[]) : string {
-    return parts.reduce((prev, segment) => {
-        let part = '';
+export function arrayToPath(parts: readonly PropertyKey[]) : string {
+    let output = '';
 
-        segment = segment.replace(/^\[(\d+)]$/g, '\\[$1]');
-        segment = segment.replace(/\./g, '\\.');
+    for (let i = 0; i < parts.length; i++) {
+        let part = parts[i];
 
-        if (/^\d+$/.test(segment)) {
-            // Index access
-            part = `[${segment}]`;
-        } else if (prev) {
-            // Object key access
-            part = `.${segment}`;
-        } else {
-            // Top level key
-            part = segment;
+        let current = '';
+
+        if (typeof part === 'string') {
+            part = part.replace(/^\[(\d+)]$/g, '\\[$1]');
+            part = part.replace(/\./g, '\\.');
+
+            if (/^\d+$/.test(part)) {
+                // Index access
+                current = `[${part}]`;
+            } else if (output) {
+                // Object key access
+                current = `.${part}`;
+            } else {
+                // Top level key
+                current = part;
+            }
+        } else if (typeof part === 'number') {
+            current = `[${part}]`;
         }
 
-        return prev + part;
-    }, '');
+        output += current;
+    }
+
+    return `${output}`;
 }

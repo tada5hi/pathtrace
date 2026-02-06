@@ -5,13 +5,13 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { getPathValue } from '../path-value/get';
+import { getPathValue } from '../path-value';
 import { pathToArray } from '../helpers';
 
 export class PathInfo {
     protected data: unknown;
 
-    protected pathParts: string[];
+    protected pathParts: PropertyKey[];
 
     protected _value: unknown;
 
@@ -19,7 +19,7 @@ export class PathInfo {
 
     protected _exists: boolean | undefined;
 
-    constructor(data: unknown, path: string | string[]) {
+    constructor(data: unknown, path: PropertyKey | PropertyKey[]) {
         this.data = data;
 
         if (Array.isArray(path)) {
@@ -43,7 +43,7 @@ export class PathInfo {
         return this._value;
     }
 
-    get name() : string | null {
+    get name() : PropertyKey | null {
         if (this.pathParts.length > 0) {
             return this.pathParts[this.pathParts.length - 1];
         }

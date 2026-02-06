@@ -59,7 +59,7 @@ describe('getPathInfo', () => {
             expect(info.parent.exists).toBeTruthy();
         }
         expect(info.value).toEqual(obj.primes[2]);
-        expect(info.name).toEqual('2');
+        expect(info.name).toEqual(2);
         expect(info.exists).toBeTruthy();
     });
 
@@ -68,12 +68,12 @@ describe('getPathInfo', () => {
 
         const info = getPathInfo(obj, 'dimensions.lengths[2][1]');
         if (info.parent) {
-            expect(info.parent.name).toEqual('2');
+            expect(info.parent.name).toEqual(2);
             expect(info.parent.value).toEqual(obj.dimensions.lengths[2]);
             expect(info.parent.exists).toBeTruthy();
         }
         expect(info.value).toEqual(obj.dimensions.lengths[2][1]);
-        expect(info.name).toEqual('1');
+        expect(info.name).toEqual(1);
         expect(info.exists).toBeTruthy();
     });
 
@@ -87,7 +87,7 @@ describe('getPathInfo', () => {
             expect(info.parent.exists).toBeTruthy();
         }
         expect(info.value).toEqual(undefined);
-        expect(info.name).toEqual('3');
+        expect(info.name).toEqual(3);
         expect(info.exists).toBeFalsy();
     });
 
@@ -96,12 +96,12 @@ describe('getPathInfo', () => {
 
         const info = getPathInfo(obj, 'dimensions.lengths[2][5]');
         if (info.parent) {
-            expect(info.parent.name).toEqual('2');
+            expect(info.parent.name).toEqual(2);
             expect(info.parent.value).toEqual(obj.dimensions.lengths[2]);
             expect(info.parent.exists).toBeTruthy();
         }
         expect(info.value).toEqual(undefined);
-        expect(info.name).toEqual('5');
+        expect(info.name).toEqual(5);
         expect(info.exists).toBeFalsy();
     });
 
@@ -129,7 +129,7 @@ describe('getPathInfo', () => {
             expect(info.exists).toBeTruthy();
         }
         expect(info.value).toEqual(obj['dimensions.lengths']['[2]'][1]);
-        expect(info.name).toEqual('1');
+        expect(info.name).toEqual(1);
         expect(info.exists).toBeTruthy();
     });
 
