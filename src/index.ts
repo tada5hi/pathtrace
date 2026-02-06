@@ -12,3 +12,4 @@ export * from './path-value';
 export * from './path-info';
 
 export * from './remove';
+export * from './types';

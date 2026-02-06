@@ -1,0 +1,16 @@
+{
+    "release-type": "node",
+    "bump-minor-pre-major": true,
+    "bump-patch-for-minor-pre-major": true,
+    "initial-version": "1.1.0",
+    "packages": {
+        ".": {"component": "root"}
+    },
+    "plugins": [
+        {
+            "type": "node-workspace",
+            "updatePeerDependencies": true
+        }
+    ],
+    "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}
