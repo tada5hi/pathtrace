@@ -20,7 +20,7 @@
         "build:types": "tsc --emitDeclarationOnly -p tsconfig.json",
         "build:js": "rollup -c",
         "build": "rimraf ./dist && cross-env NODE_ENV=production npm run build:js && npm run build:types",
-        "test": "cross-env NODE_ENV=test vitest run",
+        "test": "cross-env NODE_ENV=test vitest run --typecheck",
         "test:coverage": "cross-env NODE_ENV=test vitest run --coverage",
         "lint": "eslint --ext .js,.vue,.ts ./src ./test",
         "lint:fix": "npm run lint -- --fix"

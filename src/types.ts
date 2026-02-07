@@ -7,39 +7,39 @@
 
 export type ObjectLiteral = Record<PropertyKey, any>;
 
-type ToNumberKey<T> = T extends `[${number}]` ?
+type ToWrappedNumber<T> = T extends `[${number}]` ?
     T :
-    T extends number ?
+    T extends number | `${number}` ?
             `[${T}]` :
         T;
+
+type FromWrappedNumber<T> = T extends `[${infer U}]` ? U : T;
 
 type PrevIndex = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
 type KeyConcat<
     A extends string | number,
     B extends string | number,
-> = B extends `${number}` | number ?
-    `${A}[${B}]` :
-    B extends `[${number}]` ?
-            `${A}${B}` :
-            `${A}.${B}`;
+> = A extends number | `${number}` | `[${number}]` ?
+    `${ToWrappedNumber<A>}${B}` :
+    B extends number | `${number}` | `[${number}]` ?
+        `${A}${ToWrappedNumber<B>}` :
+                `${A}.${B}`;
 
-type EscapeKey<T extends string | number> = T extends `${infer A}.${infer B}` ?
-    `${A}\\.${EscapeKey<B>}` :
-    T extends `[${number}]` ?
-        `\\[${T}\\]` :
-        T;
+type EscapeKey<T extends string | number> = T extends `[${number}]` ?
+        `\\[${FromWrappedNumber<T>}\\]` :
+    T;
 
 type Glob = '*' | '**';
-type GlobPaths<
+type GlobNext<
     T extends string | number,
     Depth extends number = 4,
 > = [Depth] extends [0] ?
     never :
-    T extends Glob | `${Glob}.${string | number}` ?
+    T extends Glob ?
         never :
-        T extends `${infer A}.${infer B}` ?
-            EscapeKey<A> | KeyConcat<EscapeKey<A>, GlobPaths<B, PrevIndex[Depth]>> :
+        T extends `${Glob}.${infer U}` ?
+            U :
             T extends string | number ?
                 T :
                 never;
@@ -51,8 +51,8 @@ type ArrayPaths<
 > = P extends string | number ?
     (
         KeyConcat<K, number> |
-        KeyConcat<KeyConcat<K, number>, P> |
-        KeyConcat<'**', GlobPaths<P>> |
+        KeyConcat<K, KeyConcat<number, P>> |
+        KeyConcat<'**', GlobNext<P>> |
         K
     ) : never;
 
@@ -65,7 +65,7 @@ type ObjectPaths<
         KeyConcat<K, '*'> |
         KeyConcat<K, '**'> |
         KeyConcat<'*', P> |
-        KeyConcat<'**', GlobPaths<P>> |
+        KeyConcat<'**', GlobNext<P>> |
         K
     ) : never;
 
@@ -80,12 +80,6 @@ export type Path<
                 ArrayPaths<EscapeKey<Key>, Path<U, PrevIndex[Depth]>> :
                 T[Key] extends ObjectLiteral ?
                     ObjectPaths<EscapeKey<Key>, Path<T[Key], PrevIndex[Depth]>> :
-                    EscapeKey<Key> | KeyConcat<EscapeKey<Key>, T[Key]>
+                    EscapeKey<Key>
         }[keyof T & (string | number)] :
-        T extends (infer U)[] ?
-            Path<U, PrevIndex[Depth]> :
-            T extends string ?
-                T :
-                T extends number ?
-                    ToNumberKey<T> :
-                    never;
+        never;
