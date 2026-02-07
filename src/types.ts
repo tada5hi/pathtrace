@@ -21,7 +21,11 @@ type KeyConcat<
     A extends string | number,
     B extends string | number,
 > = A extends number | `${number}` | `[${number}]` ?
-    `${ToWrappedNumber<A>}${B}` :
+    (
+        B extends number | `${number}` | `[${number}]` ?
+        `${ToWrappedNumber<A>}${ToWrappedNumber<B>}` :
+         `${ToWrappedNumber<A>}.${B}`
+    ) :
     B extends number | `${number}` | `[${number}]` ?
         `${A}${ToWrappedNumber<B>}` :
                 `${A}.${B}`;
