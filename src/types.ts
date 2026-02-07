@@ -5,10 +5,13 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export type ObjectLiteral = Record<string | number, any>;
+export type ObjectLiteral = Record<PropertyKey, any>;
 
-type ArrayElement<ArrayType extends readonly unknown[]> =
-    ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+type ToNumberKey<T> = T extends `[${number}]` ?
+    T :
+    T extends number ?
+            `[${T}]` :
+        T;
 
 type PrevIndex = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
@@ -73,18 +76,16 @@ export type Path<
     never :
     T extends ObjectLiteral ?
         {
-            [Key in keyof T & (string | number)]: T[Key] extends unknown[] ?
-                ArrayPaths<
-                EscapeKey<Key>,
-                Path<ArrayElement<T[Key]>, PrevIndex[Depth]>
-                > :
+            [Key in keyof T & (string | number)]: T[Key] extends (infer U)[] ?
+                ArrayPaths<EscapeKey<Key>, Path<U, PrevIndex[Depth]>> :
                 T[Key] extends ObjectLiteral ?
-                    ObjectPaths<
-                    EscapeKey<Key>,
-                    Path<T[Key], PrevIndex[Depth]>
-                    > :
-                    EscapeKey<Key>
+                    ObjectPaths<EscapeKey<Key>, Path<T[Key], PrevIndex[Depth]>> :
+                    EscapeKey<Key> | KeyConcat<EscapeKey<Key>, T[Key]>
         }[keyof T & (string | number)] :
-        T extends unknown[] ?
-            Path<ArrayElement<T>, PrevIndex[Depth]> :
-            never;
+        T extends (infer U)[] ?
+            Path<U, PrevIndex[Depth]> :
+            T extends string ?
+                T :
+                T extends number ?
+                    ToNumberKey<T> :
+                    never;
