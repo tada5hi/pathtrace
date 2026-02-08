@@ -65,6 +65,7 @@ describe('path', () => {
         } as const;
 
         assertType<Path<typeof ob>>('complex');
+        assertType<Path<typeof ob>>('complex[0]');
         assertType<Path<typeof ob>>('complex[0].hello');
         assertType<Path<typeof ob>>('complex[1]');
         assertType<Path<typeof ob>>('complex[1].universe');
