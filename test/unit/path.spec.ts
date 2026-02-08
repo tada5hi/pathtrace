@@ -17,6 +17,9 @@ describe('path', () => {
         } as const;
 
         assertType<Path<typeof ob>>('hello');
+
+        type MyType = Path<{ [key: string]: any }>;
+        assertType<MyType>('hello');
     });
 
     it('should work with simple array', () => {
@@ -25,6 +28,9 @@ describe('path', () => {
         } as const;
 
         assertType<Path<typeof ob>>('hello');
+
+        type MyType = Path<{ foo: unknown[] }>;
+        assertType<MyType>('foo');
     });
 
     it('should work with simple nested object', () => {

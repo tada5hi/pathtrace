@@ -50,12 +50,12 @@ type PathVariants<
 > = P extends string | number ?
     (
         PathNormalize<
+        K |
         KeyConcat<K, P> |
         KeyConcat<K, '*'> |
         KeyConcat<K, '**'> |
         KeyConcat<'*', P> |
-        KeyConcat<'**', GlobNext<P>> |
-        K
+        KeyConcat<'**', GlobNext<P>>
         >
     ) : never;
 
@@ -67,11 +67,13 @@ export type Path<
     T extends ObjectLiteral ?
         {
             [Key in keyof T & (string | number)]: T[Key] extends (infer U)[] ?
+                EscapeKey<Key> |
                 PathVariants<
                 EscapeKey<Key>,
                 Path<U, PrevIndex[Depth]>
                 > :
                 T[Key] extends ObjectLiteral ?
+                    EscapeKey<Key> |
                     PathVariants<
                     EscapeKey<Key>,
                     Path<T[Key], PrevIndex[Depth]>
