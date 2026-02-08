@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.1](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.1.0...pathtrace-v2.1.1) (2026-02-08)
+
+
+### Bug Fixes
+
+* enhacne path typing ([4987efd](https://github.com/tada5hi/pathtrace/commit/4987efda8b02679f1f82f41911bfbd5c449ebd5d))
+* path normalization + unified key variants ([#102](https://github.com/tada5hi/pathtrace/issues/102)) ([8c2dfcb](https://github.com/tada5hi/pathtrace/commit/8c2dfcb11abf19bfd2c3795d6b0bc97c8ef7efad))
+
 ## [2.1.0](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.0.0...pathtrace-v2.1.0) (2026-02-06)
 
 
