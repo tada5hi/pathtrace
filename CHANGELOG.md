@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.1.1...pathtrace-v2.1.2) (2026-02-08)
+
+
+### Bug Fixes
+
+* always permit ob key ([688c497](https://github.com/tada5hi/pathtrace/commit/688c497c52417a679064c556b3dd353f72ac040a))
+
 ## [2.1.1](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.1.0...pathtrace-v2.1.1) (2026-02-08)
 
 
