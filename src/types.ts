@@ -73,7 +73,7 @@ export type Path<
                 > :
                 T[Key] extends ObjectLiteral ?
                     PathVariants<
-                    Key,
+                    EscapeKey<Key>,
                     Path<T[Key], PrevIndex[Depth]>
                     > :
                     EscapeKey<Key>
