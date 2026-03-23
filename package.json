@@ -62,7 +62,7 @@
         "husky": "^9.1.7",
         "rollup": "^4.57.1",
         "ts-jest": "^29.4.6",
-        "typescript": "^5.9.3",
+        "typescript": "^6.0.2",
         "unplugin-swc": "^1.5.9",
         "vitest": "^4.0.18",
         "workspaces-publish": "^1.5.0"
