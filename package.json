@@ -56,7 +56,7 @@
         "@tada5hi/eslint-config-typescript": "^1.2.18",
         "@tada5hi/tsconfig": "^0.7.0",
         "@types/node": "^25.2.1",
-        "@vitest/coverage-v8": "^4.0.18",
+        "@vitest/coverage-v8": "^4.1.1",
         "cross-env": "^7.0.3",
         "eslint": "^8.57.1",
         "husky": "^9.1.7",
