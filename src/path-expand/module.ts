@@ -60,7 +60,10 @@ function expandPathVerboseInternal(
 
         // value is a primitive, paths being traversed from here might be in their prototype,
         // return the entire path
-        return [{ value: arrayToPath([...currPath, ...segments]), matches: currMatches }];
+        return [{
+            value: arrayToPath([...currPath, ...segments]),
+            matches: currMatches 
+        }];
     }
 
     // Use a non-null value so that non-existing fields are still selected
@@ -88,18 +91,18 @@ function expandPathVerboseInternal(
 
                 const pathMatches : string[] = [];
                 const output : PathExpanded[] = [];
-                for (let i = 0; i < children.length; i++) {
+                for (const child of children) {
                     /* istanbul ignore next */
-                    if (pathMatches.indexOf(children[i].value) !== -1) {
+                    if (pathMatches.includes(child.value)) {
                         continue;
                     }
 
-                    pathMatches.push(children[i].value);
+                    pathMatches.push(child.value);
 
                     output.push({
-                        value: children[i].value,
-                        matches: children[i].matches.length > 0 ?
-                            [...currMatches, children[i].matches.flat()] :
+                        value: child.value,
+                        matches: child.matches.length > 0 ?
+                            [...currMatches, child.matches.flat()] :
                             currMatches,
                     });
                 }

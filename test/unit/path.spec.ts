@@ -5,9 +5,8 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import {
-    assertType, describe, it,
-} from 'vitest';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { assertType, describe, it } from 'vitest';
 import type { Path } from '../../src';
 
 describe('path', () => {
@@ -62,10 +61,16 @@ describe('path', () => {
     it('should work with complex object', () => {
         const ob = {
             complex: [
-                { hello: 'universe' },
-                { universe: 'world' },
+                {
+                    hello: 'universe' 
+                },
+                {
+                    universe: 'world' 
+                },
                 [
-                    { hello: 'world' },
+                    {
+                        hello: 'world' 
+                    },
                 ],
             ],
         } as const;

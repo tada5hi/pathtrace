@@ -10,11 +10,9 @@ runs:
             with:
                 path: |
                     **/dist/**
-                    **/bin/**
                 key: ${{ runner.os }}-build-${{ github.sha }}
 
         -   name: Build
             shell: bash
             if: steps.cache.outputs.cache-hit != 'true'
-            run: |
-                npm run build
+            run: npm run build

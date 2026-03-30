@@ -32,20 +32,20 @@ export function pathToArray(segment: PropertyKey) : PropertyKey[] {
 
     const result : PropertyKey[] = [];
 
-    for (let i = 0; i < parts.length; i++) {
+    for (const part of parts) {
         if (
-            parts[i] === 'constructor' ||
-            parts[i] === '__proto__' ||
-            parts[i] === 'prototype'
+            part === 'constructor' ||
+            part === '__proto__' ||
+            part === 'prototype'
         ) {
             continue;
         }
 
-        const regex = BRACKET_NUMBER_REGEX.exec(parts[i]);
+        const regex = BRACKET_NUMBER_REGEX.exec(part);
         if (regex) {
             result.push(Number(regex[1]));
         } else {
-            result.push(parts[i].replace(/\\([.[\]])/g, '$1'));
+            result.push(part.replace(/\\([.[\]])/g, '$1'));
         }
     }
 

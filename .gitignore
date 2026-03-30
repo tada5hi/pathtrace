@@ -1,13 +1,11 @@
-.claude/settings.local.json
 .DS_Store
 dist
-doc
 node_modules
 .vscode
-.nyc_output
+.idea
 coverage
 *.log
 npm-debug.log*
-.idea
-reports
 .env
+cache
+.claude/settings.local.json

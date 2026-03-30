@@ -11,10 +11,6 @@ inputs:
 runs:
     using: 'composite'
     steps:
-        -   name: echo github.ref
-            shell: bash
-            run: echo ${{ github.ref }}
-
         -   name: Use Node.js ${{ inputs.node-version }}
             uses: actions/setup-node@v4
             with:
@@ -27,11 +23,10 @@ runs:
                 path: |
                     node_modules
                     */*/node_modules
-                key: ${{ runner.os }}-install-${{ hashFiles('**/package.json') }}
+                key: ${{ runner.os }}-install-${{ hashFiles('**/package-lock.json') }}
                 restore-keys: |
                     ${{ runner.os }}-install-
 
         -   name: Install
             shell: bash
-            run: |
-                npm ci
+            run: npm ci

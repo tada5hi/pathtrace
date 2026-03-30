@@ -16,7 +16,13 @@ describe('getPathValue', () => {
                 hello: 'world',
             },
             world: ['hello', 'universe'],
-            complex: [{ hello: 'universe' }, { universe: 'world' }, [{ hello: 'world' }]],
+            complex: [{
+                hello: 'universe' 
+            }, {
+                universe: 'world' 
+            }, [{
+                hello: 'world' 
+            }]],
         };
 
         const arr = [[true]];

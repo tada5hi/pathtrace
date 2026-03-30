@@ -12,9 +12,7 @@
 export function arrayToPath(parts: readonly PropertyKey[]) : string {
     let output = '';
 
-    for (let i = 0; i < parts.length; i++) {
-        let part = parts[i];
-
+    for (let part of parts) {
         let current = '';
 
         if (typeof part === 'string') {

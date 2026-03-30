@@ -69,14 +69,14 @@ export type Path<
             [Key in keyof T & (string | number)]: T[Key] extends (infer U)[] ?
                 EscapeKey<Key> |
                 PathVariants<
-                EscapeKey<Key>,
-                Path<U, PrevIndex[Depth]>
+                    EscapeKey<Key>,
+                    Path<U, PrevIndex[Depth]>
                 > :
                 T[Key] extends ObjectLiteral ?
                     EscapeKey<Key> |
                     PathVariants<
-                    EscapeKey<Key>,
-                    Path<T[Key], PrevIndex[Depth]>
+                        EscapeKey<Key>,
+                        Path<T[Key], PrevIndex[Depth]>
                     > :
                     EscapeKey<Key>
         }[keyof T & (string | number)] :

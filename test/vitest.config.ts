@@ -1,16 +1,17 @@
-/*
- * Copyright (c) 2025.
- *  Author Peter Placzek (tada5hi)
- *  For the full copyright and license information,
- *  view the LICENSE file that was distributed with this source code.
- */
-
-import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     test: {
-        include: ['test/unit/**/*.spec.ts'],
+        include: ['test/unit/**/*.{test,spec}.{js,ts}'],
+        coverage: {
+            provider: 'v8',
+            include: ['src/**/*.{ts,tsx,js,jsx}'],
+            thresholds: {
+                branches: 80,
+                functions: 80,
+                lines: 80,
+                statements: 80,
+            },
+        },
     },
-    plugins: [swc.vite()],
 });

@@ -33,7 +33,7 @@ jobs:
 
             -   name: Checkout
                 if: steps.release.outputs.releases_created == 'true'
-                uses: actions/checkout@v6
+                uses: actions/checkout@v4
                 with:
                     fetch-depth: 0
 
@@ -49,4 +49,4 @@ jobs:
 
             -   name: Publish
                 if: steps.release.outputs.releases_created == 'true'
-                run: npx workspaces-publish
+                uses: tada5hi/monoship@v2
