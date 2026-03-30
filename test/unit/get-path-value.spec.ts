@@ -43,3 +43,27 @@ describe('getPathValue', () => {
         expect(getPathValue('word', 'length')).toEqual(4);
     });
 });
+
+describe('avoid prototype pollution vulnerability', () => {
+    it('exclude __proto__ via array path', () => {
+        const obj = {};
+        expect(getPathValue(obj, ['__proto__', 'constructor'])).toBeUndefined();
+    });
+
+    it('exclude __proto__ at non-first position via array path', () => {
+        const obj = {
+            a: {},
+        };
+        expect(getPathValue(obj, ['a', '__proto__', 'constructor'])).toBeUndefined();
+    });
+
+    it('exclude constructor via array path', () => {
+        const obj = {};
+        expect(getPathValue(obj, ['constructor', 'prototype'])).toBeUndefined();
+    });
+
+    it('exclude prototype via array path', () => {
+        const obj = {};
+        expect(getPathValue(obj, ['prototype', 'toString'])).toBeUndefined();
+    });
+});

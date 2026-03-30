@@ -142,4 +142,11 @@ describe('avoid prototype pollution vulnerability', () => {
         expect(obj.polluted).toBeUndefined();
         expect((Object.prototype as any).polluted).toBeUndefined();
     });
+
+    it('exclude prototype via array path', () => {
+        const obj : Record<string, any> = {};
+        setPathValue(obj, ['prototype', 'polluted'], 'yes');
+        expect(obj.polluted).toBeUndefined();
+        expect((Object.prototype as any).polluted).toBeUndefined();
+    });
 });
