@@ -6,7 +6,7 @@
  */
 
 import { pathToArray } from '../helpers';
-import { isObject } from '../utils';
+import { isObject, isUnsafeKey } from '../utils';
 
 const NUMBER_REGEX = /^\d+$/;
 
@@ -28,6 +28,10 @@ export function setPathValue(
         }
 
         const key = parts[index] as keyof typeof temp;
+
+        if (isUnsafeKey(key)) {
+            break;
+        }
 
         // [foo, '0']
         if (typeof temp[key] === 'undefined') {

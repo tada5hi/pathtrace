@@ -119,4 +119,27 @@ describe('avoid prototype pollution vulnerability', () => {
         setPathValue(obj, 'prototype', true);
         expect(obj.prototype).toBeUndefined();
     });
+
+    it('exclude __proto__ via array path', () => {
+        const obj : Record<string, any> = {};
+        setPathValue(obj, ['__proto__', 'polluted'], 'yes');
+        expect(obj.polluted).toBeUndefined();
+        expect((Object.prototype as any).polluted).toBeUndefined();
+    });
+
+    it('exclude __proto__ at non-first position via array path', () => {
+        const obj : Record<string, any> = {
+            a: {},
+        };
+        setPathValue(obj, ['a', '__proto__', 'polluted'], 'yes');
+        expect(obj.a.polluted).toBeUndefined();
+        expect((Object.prototype as any).polluted).toBeUndefined();
+    });
+
+    it('exclude constructor via array path', () => {
+        const obj : Record<string, any> = {};
+        setPathValue(obj, ['constructor', 'prototype', 'polluted'], 'yes');
+        expect(obj.polluted).toBeUndefined();
+        expect((Object.prototype as any).polluted).toBeUndefined();
+    });
 });
