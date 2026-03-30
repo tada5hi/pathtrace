@@ -6,6 +6,7 @@
  */
 
 import { pathToArray } from '../helpers';
+import { isUnsafeKey } from '../utils';
 
 export function getPathValue(
     data: unknown,
@@ -20,6 +21,10 @@ export function getPathValue(
     let index = 0;
     while (index < parts.length) {
         if (temp === null || typeof temp === 'undefined') {
+            break;
+        }
+
+        if (isUnsafeKey(parts[index])) {
             break;
         }
 

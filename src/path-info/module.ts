@@ -7,6 +7,7 @@
 
 import { getPathValue } from '../path-value';
 import { pathToArray } from '../helpers';
+import { isUnsafeKey } from '../utils';
 
 export class PathInfo {
     protected data: unknown;
@@ -23,7 +24,7 @@ export class PathInfo {
         this.data = data;
 
         if (Array.isArray(path)) {
-            this.pathParts = path;
+            this.pathParts = path.filter((p) => !isUnsafeKey(p));
         } else {
             this.pathParts = pathToArray(path);
         }

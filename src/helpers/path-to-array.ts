@@ -5,6 +5,8 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
+import { isUnsafeKey } from '../utils';
+
 export const BRACKET_NUMBER_REGEX = /(?<!\\)\[(\d+)]$/;
 
 /**
@@ -33,11 +35,7 @@ export function pathToArray(segment: PropertyKey) : PropertyKey[] {
     const result : PropertyKey[] = [];
 
     for (const part of parts) {
-        if (
-            part === 'constructor' ||
-            part === '__proto__' ||
-            part === 'prototype'
-        ) {
+        if (isUnsafeKey(part)) {
             continue;
         }
 

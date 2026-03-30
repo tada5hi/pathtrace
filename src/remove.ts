@@ -6,7 +6,7 @@
  */
 
 import { pathToArray } from './helpers';
-import { isObject } from './utils';
+import { isObject, isUnsafeKey } from './utils';
 
 export function removePath(
     data: Record<string, any> | Record<string, any>[],
@@ -25,6 +25,10 @@ export function removePath(
         }
 
         const key = parts[index] as keyof typeof temp;
+
+        if (isUnsafeKey(key)) {
+            break;
+        }
 
         if (!Object.prototype.hasOwnProperty.call(temp, key)) {
             break;
