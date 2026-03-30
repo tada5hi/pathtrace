@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.0](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.1.2...pathtrace-v2.2.0) (2026-03-30)
+
+
+### Features
+
+* add check for unsafe-keys ([#143](https://github.com/tada5hi/pathtrace/issues/143)) ([849752c](https://github.com/tada5hi/pathtrace/commit/849752c920302fee7b4bffab8fe7f218960b3f70))
+* modernize project ([1b9208f](https://github.com/tada5hi/pathtrace/commit/1b9208f67eea010582adb9fcd02f4a3a87b74e07))
+
 ## [2.1.2](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.1.1...pathtrace-v2.1.2) (2026-02-08)
 
 
