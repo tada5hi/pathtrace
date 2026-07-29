@@ -83,7 +83,10 @@ export class PathInfo {
             return this._exists;
         }
 
-        if (!this.name || !this.parent) {
+        // Only the root path (no segments) exists unconditionally. Testing
+        // truthiness instead would also short-circuit for the falsy keys `0`
+        // and `''`, reporting a missing index 0 as an existing path.
+        if (this.name === null || !this.parent) {
             this._exists = true;
             return this._exists;
         }
