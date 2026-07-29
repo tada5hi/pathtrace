@@ -150,3 +150,18 @@ describe('avoid prototype pollution vulnerability', () => {
         expect((Object.prototype as any).polluted).toBeUndefined();
     });
 });
+
+describe('unsafe segments do not redirect the write', () => {
+    it('should not write to a neighbouring path', () => {
+        const obj : Record<string, any> = {
+            a: {} 
+        };
+
+        // Dropping `__proto__` would leave `a.x`, writing somewhere the
+        // caller never named.
+        setPathValue(obj, 'a.__proto__.x', 'yes');
+
+        expect(obj.a).toEqual({});
+        expect(({} as Record<string, unknown>).x).toBeUndefined();
+    });
+});

@@ -5,12 +5,15 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { isUnsafeKey } from '../utils';
-
 export const BRACKET_NUMBER_REGEX = /(?<!\\)\[(\d+)]$/;
 
 /**
  * Convert string to property path array.
+ *
+ * Unsafe segments (`__proto__`, `constructor`, `prototype`) are **kept**. They
+ * are rejected during traversal instead — dropping them here would silently
+ * turn `a.__proto__.b` into `a.b`, resolving a different path rather than
+ * refusing the requested one.
  *
  * @see https://github.com/lodash/lodash/blob/main/src/.internal/stringToPath.ts
  * @see https://github.com/chaijs/pathval
@@ -35,10 +38,6 @@ export function pathToArray(segment: PropertyKey) : PropertyKey[] {
     const result : PropertyKey[] = [];
 
     for (const part of parts) {
-        if (isUnsafeKey(part)) {
-            continue;
-        }
-
         const regex = BRACKET_NUMBER_REGEX.exec(part);
         if (regex) {
             result.push(Number(regex[1]));

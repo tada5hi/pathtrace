@@ -142,3 +142,36 @@ describe('getPathInfo', () => {
         expect(info.exists).toBeTruthy();
     });
 });
+
+describe('unsafe segments', () => {
+    const data = {
+        a: {
+            b: 'safe' 
+        },
+        secret: 'top' 
+    };
+
+    it.each([
+        ['__proto__'],
+        ['constructor'],
+        ['prototype'],
+    ])('should not report %s as an existing path', (key) => {
+        const info = getPathInfo(data, key);
+
+        // Filtering the segment away used to leave an empty path, which
+        // resolves to the root — reporting the whole object as the value.
+        expect(info.value).toBeUndefined();
+    });
+
+    it('should not describe a neighbouring path when a segment is unsafe', () => {
+        const info = getPathInfo(data, 'a.__proto__.b');
+
+        expect(info.value).toBeUndefined();
+    });
+
+    it('should reject an unsafe segment given as an array path', () => {
+        const info = getPathInfo(data, ['a', '__proto__', 'b']);
+
+        expect(info.value).toBeUndefined();
+    });
+});

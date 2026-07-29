@@ -7,7 +7,6 @@
 
 import { getPathValue } from '../path-value';
 import { pathToArray } from '../helpers';
-import { isUnsafeKey } from '../utils';
 
 export class PathInfo {
     protected data: unknown;
@@ -23,8 +22,12 @@ export class PathInfo {
     constructor(data: unknown, path: PropertyKey | PropertyKey[]) {
         this.data = data;
 
+        // Unsafe segments are kept, not filtered: dropping them would shorten
+        // the path and describe a different — possibly empty — one, which is
+        // why `getPathInfo(data, '__proto__')` used to report the whole object
+        // as an existing value. They are rejected by `exists`/`value` instead.
         if (Array.isArray(path)) {
-            this.pathParts = path.filter((p) => !isUnsafeKey(p));
+            this.pathParts = [...path];
         } else {
             this.pathParts = pathToArray(path);
         }

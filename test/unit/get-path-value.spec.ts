@@ -66,4 +66,25 @@ describe('avoid prototype pollution vulnerability', () => {
         const obj = {};
         expect(getPathValue(obj, ['prototype', 'toString'])).toBeUndefined();
     });
+
+    it('should not resolve a neighbouring path when a segment is unsafe', () => {
+        const obj = {
+            a: {
+                b: 'safe' 
+            } 
+        };
+
+        // Dropping `__proto__` would leave `a.b`, silently answering a
+        // different question than the one that was asked.
+        expect(getPathValue(obj, 'a.__proto__.b')).toBeUndefined();
+        expect(getPathValue(obj, ['a', '__proto__', 'b'])).toBeUndefined();
+        expect(getPathValue(obj, 'a.b')).toEqual('safe');
+    });
+
+    it('should not resolve an own unsafe key', () => {
+        const obj = JSON.parse('{"__proto__":{"polluted":true}}');
+
+        expect(getPathValue(obj, '__proto__')).toBeUndefined();
+        expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    });
 });

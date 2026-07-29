@@ -20,4 +20,15 @@ describe('path-to-array', () => {
     ])('%s', (_name, input, expected) => {
         expect(pathToArray(input)).toEqual(expected);
     });
+
+    // Dropping an unsafe segment would shorten the path and describe a
+    // different one, so they are kept here and rejected during traversal.
+    it.each([
+        ['unsafe segment alone', '__proto__', ['__proto__']],
+        ['unsafe segment between text segments', 'a.__proto__.b', ['a', '__proto__', 'b']],
+        ['constructor segment', 'a.constructor.b', ['a', 'constructor', 'b']],
+        ['prototype segment', 'a.prototype.b', ['a', 'prototype', 'b']],
+    ])('should keep an unsafe segment: %s', (_name, input, expected) => {
+        expect(pathToArray(input)).toEqual(expected);
+    });
 });
