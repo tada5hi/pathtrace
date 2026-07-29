@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.2.1...pathtrace-v2.2.2) (2026-07-29)
+
+
+### Bug Fixes
+
+* resolve accessors declared on a user prototype ([#188](https://github.com/tada5hi/pathtrace/issues/188)) ([5056a15](https://github.com/tada5hi/pathtrace/commit/5056a15c76fdb7ae4284bbfaac894052e32ef3e8))
+
 ## [2.2.1](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.2.0...pathtrace-v2.2.1) (2026-07-29)
 
 
