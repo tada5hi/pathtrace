@@ -101,6 +101,18 @@ describe('inherited members', () => {
         }, `a.${key}`)).toBeUndefined();
     });
 
+    it('should resolve an accessor declared on a user prototype', () => {
+        const prototype = {};
+        Object.defineProperty(prototype, 'id', {
+            get: () => 'abc',
+            configurable: true 
+        });
+
+        expect(getPathValue({
+            identity: Object.create(prototype) 
+        }, 'identity.id')).toEqual('abc');
+    });
+
     it('should still resolve own properties of boxed primitives', () => {
         // Documented behaviour: `length` is an own property, unlike the above.
         expect(getPathValue('word', 'length')).toEqual(4);

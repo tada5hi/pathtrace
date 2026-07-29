@@ -143,6 +143,25 @@ describe('getPathInfo', () => {
     });
 });
 
+/**
+ * Build an object whose `key` is an accessor on its **prototype**, the shape a
+ * class instance with a getter has. `levels` adds intermediate prototypes, so a
+ * subclass chain can be exercised too.
+ */
+function withPrototypeAccessor(key: string, value: unknown, levels = 1) : object {
+    let prototype : object = {};
+    Object.defineProperty(prototype, key, {
+        get: () => value,
+        configurable: true 
+    });
+
+    for (let i = 1; i < levels; i++) {
+        prototype = Object.create(prototype);
+    }
+
+    return Object.create(prototype);
+}
+
 describe('unsafe segments', () => {
     const data = {
         a: {
@@ -231,6 +250,49 @@ describe('inherited members', () => {
 
         expect(info.exists).toBe(false);
         expect(info.value).toBeUndefined();
+    });
+
+    it('should resolve an accessor declared on a user prototype', () => {
+        // A getter on a class is data at the call site — indistinguishable from
+        // a field — unlike anything inherited from Object.prototype.
+        const info = getPathInfo({
+            identity: withPrototypeAccessor('id', 'abc') 
+        }, 'identity.id');
+
+        expect(info.exists).toBe(true);
+        expect(info.value).toEqual('abc');
+    });
+
+    it('should resolve an accessor inherited through a subclass chain', () => {
+        const identity = withPrototypeAccessor('realmId', 'master', 3);
+        const info = getPathInfo({
+            identity 
+        }, 'identity.realmId');
+
+        expect(info.exists).toBe(true);
+        expect(info.value).toEqual('master');
+    });
+
+    it('should not resolve a universally inherited member on a cross-realm object', () => {
+        // A foreign Object.prototype stands in for another realm: comparing
+        // prototype identity would miss it, the key-name rule does not.
+        const foreignPrototype = Object.create(null);
+        Object.defineProperty(foreignPrototype, 'toString', {
+            value: () => 'x',
+            configurable: true,
+        });
+
+        expect(getPathInfo({
+            o: Object.create(foreignPrototype) 
+        }, 'o.toString').exists).toBe(false);
+    });
+
+    it('should not resolve a universally inherited member on such an object', () => {
+        const info = getPathInfo({
+            identity: withPrototypeAccessor('id', 'abc') 
+        }, 'identity.toString');
+
+        expect(info.exists).toBe(false);
     });
 
     it('should report an own property of a boxed primitive as existing', () => {
