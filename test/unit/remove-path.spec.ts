@@ -87,3 +87,19 @@ describe('avoid prototype pollution vulnerability', () => {
         expect((Object.prototype as any).constructor).toBeDefined();
     });
 });
+
+describe('unsafe segments do not redirect the removal', () => {
+    it('should not remove a neighbouring path', () => {
+        const obj : Record<string, any> = {
+            a: {
+                x: 1 
+            } 
+        };
+
+        removePath(obj, 'a.__proto__.x');
+
+        expect(obj.a).toEqual({
+            x: 1 
+        });
+    });
+});

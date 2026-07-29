@@ -142,3 +142,99 @@ describe('getPathInfo', () => {
         expect(info.exists).toBeTruthy();
     });
 });
+
+describe('unsafe segments', () => {
+    const data = {
+        a: {
+            b: 'safe' 
+        },
+        secret: 'top' 
+    };
+
+    it.each([
+        ['__proto__'],
+        ['constructor'],
+        ['prototype'],
+    ])('should not report %s as an existing path', (key) => {
+        const info = getPathInfo(data, key);
+
+        // Filtering the segment away used to leave an empty path, which
+        // resolves to the root — reporting the whole object as the value.
+        expect(info.exists).toBe(false);
+        expect(info.value).toBeUndefined();
+    });
+
+    it('should not describe a neighbouring path when a segment is unsafe', () => {
+        const info = getPathInfo(data, 'a.__proto__.b');
+
+        expect(info.exists).toBe(false);
+        expect(info.value).toBeUndefined();
+    });
+
+    it('should reject an unsafe segment given as an array path', () => {
+        const info = getPathInfo(data, ['a', '__proto__', 'b']);
+
+        expect(info.exists).toBe(false);
+        expect(info.value).toBeUndefined();
+    });
+});
+
+describe('inherited members', () => {
+    it.each([
+        ['toString'],
+        ['valueOf'],
+        ['hasOwnProperty'],
+    ])('should not report the inherited member %s as existing', (key) => {
+        const info = getPathInfo({
+            a: {} 
+        }, `a.${key}`);
+
+        expect(info.exists).toBe(false);
+        expect(info.value).toBeUndefined();
+    });
+
+    it('should report an own property whose value is undefined as existing', () => {
+        const info = getPathInfo({
+            a: undefined 
+        }, 'a');
+
+        expect(info.exists).toBe(true);
+    });
+
+    it('should not report a missing index 0 as existing', () => {
+        // `0` is falsy, so a truthiness guard used to skip the own-entry
+        // check entirely and report every index-0 path as existing.
+        const info = getPathInfo([], [0]);
+
+        expect(info.exists).toBe(false);
+        expect(info.value).toBeUndefined();
+    });
+
+    it('should report a present index 0 as existing', () => {
+        const info = getPathInfo([9], [0]);
+
+        expect(info.exists).toBe(true);
+        expect(info.value).toEqual(9);
+    });
+
+    it('should not report a missing index 0 as existing via a string path', () => {
+        const info = getPathInfo({
+            a: [] 
+        }, 'a[0]');
+
+        expect(info.exists).toBe(false);
+        expect(info.value).toBeUndefined();
+    });
+
+    it('should not report a missing empty-string key as existing', () => {
+        const info = getPathInfo({}, ['']);
+
+        expect(info.exists).toBe(false);
+        expect(info.value).toBeUndefined();
+    });
+
+    it('should report an own property of a boxed primitive as existing', () => {
+        expect(getPathInfo('word', 'length').exists).toBe(true);
+        expect(getPathInfo([1, 2, 3], 'length').exists).toBe(true);
+    });
+});

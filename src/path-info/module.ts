@@ -7,7 +7,7 @@
 
 import { getPathValue } from '../path-value';
 import { pathToArray } from '../helpers';
-import { isUnsafeKey } from '../utils';
+import { hasOwnEntry } from '../utils';
 
 export class PathInfo {
     protected data: unknown;
@@ -23,8 +23,12 @@ export class PathInfo {
     constructor(data: unknown, path: PropertyKey | PropertyKey[]) {
         this.data = data;
 
+        // Unsafe segments are kept, not filtered: dropping them would shorten
+        // the path and describe a different — possibly empty — one, which is
+        // why `getPathInfo(data, '__proto__')` used to report the whole object
+        // as an existing value. They are rejected by `exists`/`value` instead.
         if (Array.isArray(path)) {
-            this.pathParts = path.filter((p) => !isUnsafeKey(p));
+            this.pathParts = [...path];
         } else {
             this.pathParts = pathToArray(path);
         }
@@ -79,19 +83,17 @@ export class PathInfo {
             return this._exists;
         }
 
-        if (!this.name || !this.parent) {
+        // Only the root path (no segments) exists unconditionally. Testing
+        // truthiness instead would also short-circuit for the falsy keys `0`
+        // and `''`, reporting a missing index 0 as an existing path.
+        if (this.name === null || !this.parent) {
             this._exists = true;
             return this._exists;
         }
 
-        if (
-            this.parent.value !== null &&
-            typeof this.parent.value !== 'undefined'
-        ) {
-            this._exists = this.name in Object(this.parent.value);
-        } else {
-            this._exists = false;
-        }
+        // Own, safe entries only — inherited members (`toString`, `valueOf`, …)
+        // are not data and must not be reported as existing paths.
+        this._exists = hasOwnEntry(this.parent.value, this.name);
 
         return this._exists;
     }
