@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.2.0...pathtrace-v2.2.1) (2026-07-29)
+
+
+### Bug Fixes
+
+* reject unsafe path segments and resolve own entries only ([#182](https://github.com/tada5hi/pathtrace/issues/182)) ([1fefe79](https://github.com/tada5hi/pathtrace/commit/1fefe798892de667764fc79aadd1100ff4561926))
+
 ## [2.2.0](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.1.2...pathtrace-v2.2.0) (2026-03-30)
 
 

@@ -1,6 +1,6 @@
 {
     "name": "pathtrace",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "description": "Simplifies working with nested objects and arrays by providing easy methods to retrieve, set, and check values at any path.",
     "type": "module",
     "exports": {
