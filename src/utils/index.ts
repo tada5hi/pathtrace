@@ -5,5 +5,6 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
+export * from './has-own-entry';
 export * from './is-object';
 export * from './is-unsafe-key';

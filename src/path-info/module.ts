@@ -7,6 +7,7 @@
 
 import { getPathValue } from '../path-value';
 import { pathToArray } from '../helpers';
+import { hasOwnEntry } from '../utils';
 
 export class PathInfo {
     protected data: unknown;
@@ -87,14 +88,9 @@ export class PathInfo {
             return this._exists;
         }
 
-        if (
-            this.parent.value !== null &&
-            typeof this.parent.value !== 'undefined'
-        ) {
-            this._exists = this.name in Object(this.parent.value);
-        } else {
-            this._exists = false;
-        }
+        // Own, safe entries only — inherited members (`toString`, `valueOf`, …)
+        // are not data and must not be reported as existing paths.
+        this._exists = hasOwnEntry(this.parent.value, this.name);
 
         return this._exists;
     }

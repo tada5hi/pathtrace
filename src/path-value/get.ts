@@ -6,7 +6,7 @@
  */
 
 import { pathToArray } from '../helpers';
-import { isUnsafeKey } from '../utils';
+import { hasOwnEntry } from '../utils';
 
 export function getPathValue(
     data: unknown,
@@ -24,17 +24,15 @@ export function getPathValue(
             break;
         }
 
-        if (isUnsafeKey(parts[index])) {
+        // Own, safe entries only — an unsafe segment or an inherited member
+        // ends the traversal instead of resolving to something else.
+        if (!hasOwnEntry(temp, parts[index])) {
             break;
         }
 
-        if (parts[index] in Object(temp)) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            temp = temp[parts[index]];
-        } else {
-            break;
-        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        temp = temp[parts[index]];
 
         if (index === parts.length - 1) {
             res = temp;

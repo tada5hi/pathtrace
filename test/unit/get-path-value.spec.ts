@@ -88,3 +88,30 @@ describe('avoid prototype pollution vulnerability', () => {
         expect(({} as Record<string, unknown>).polluted).toBeUndefined();
     });
 });
+
+describe('inherited members', () => {
+    it.each([
+        ['toString'],
+        ['valueOf'],
+        ['hasOwnProperty'],
+        ['isPrototypeOf'],
+    ])('should not resolve the inherited member %s', (key) => {
+        expect(getPathValue({
+            a: {} 
+        }, `a.${key}`)).toBeUndefined();
+    });
+
+    it('should still resolve own properties of boxed primitives', () => {
+        // Documented behaviour: `length` is an own property, unlike the above.
+        expect(getPathValue('word', 'length')).toEqual(4);
+        expect(getPathValue([1, 2, 3], 'length')).toEqual(3);
+    });
+
+    it('should still resolve an own property shadowing an inherited one', () => {
+        expect(getPathValue({
+            a: {
+                toString: 'mine' 
+            } 
+        }, 'a.toString')).toEqual('mine');
+    });
+});
