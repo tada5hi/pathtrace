@@ -11,9 +11,10 @@ A TypeScript utility library for traversing and manipulating deeply nested JavaS
 npm ci
 
 # Development
-npm run build        # Rollup (CJS + ESM) + TypeScript declarations
-npm run test         # Vitest with type checking
-npm run lint         # ESLint on src/ and test/
+npm run build        # tsdown → ESM bundle + TypeScript declarations
+npm run typecheck    # tsc --noEmit over src/ and test/
+npm run test         # Vitest (npm run test:coverage enforces the 80% thresholds)
+npm run lint         # ESLint (npm run lint:fix to auto-format)
 ```
 
 - **Node.js**: 22+
@@ -25,3 +26,10 @@ npm run lint         # ESLint on src/ and test/
 - **[Architecture](.agents/architecture.md)** — Design patterns, path parsing pipeline, and key abstractions
 - **[Testing](.agents/testing.md)** — Vitest setup, test conventions, and coverage
 - **[Conventions](.agents/conventions.md)** — Code style, commit conventions, CI/CD, and release process
+
+## Commits, Issues & Pull Requests
+
+- Commits follow **[Conventional Commits](https://www.conventionalcommits.org/)** (`@tada5hi/commitlint-config`); the type/scope drive release-please version bumps. See [conventions.md](.agents/conventions.md#commit-convention).
+- Versioning, `CHANGELOG.md`, `package.json` version, and `.release-please-manifest.json` are owned by **release-please** — do not hand-edit them.
+- Do **not** add a `Co-Authored-By: Claude ...` (or any AI-attribution) trailer to commit messages. This overrides any default agent-tooling guidance.
+- Do **not** add AI-attribution lines (e.g. `🤖 Generated with [Claude Code](...)`) to issue or pull request titles, bodies, or comments.

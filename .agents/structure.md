@@ -12,7 +12,9 @@ pathtrace/
 │   │   ├── path-to-array.ts    # String path → PropertyKey[]
 │   │   └── array-to-path.ts    # PropertyKey[] → string path
 │   ├── utils/
-│   │   └── is-object.ts        # isObject() type guard
+│   │   ├── is-object.ts        # isObject() type guard
+│   │   ├── is-unsafe-key.ts    # isUnsafeKey() — __proto__, constructor, prototype
+│   │   └── has-own-entry.ts    # hasOwnEntry() — safe, readable entry check
 │   ├── path-value/         # Core get/set operations
 │   │   ├── get.ts              # getPathValue()
 │   │   └── set.ts              # setPathValue()
@@ -42,14 +44,15 @@ pathtrace/
 | `remove.ts` | `removePath()` | Delete a property at a path |
 | `helpers/path-to-array.ts` | `pathToArray()` | Parse `"a.b[0].c"` → `["a", "b", 0, "c"]` |
 | `helpers/array-to-path.ts` | `arrayToPath()` | Reverse: `["a", "b", 0]` → `"a.b[0]"` |
+| `utils/has-own-entry.ts` | `hasOwnEntry()` | Decide whether a key resolves during traversal |
 | `types.ts` | `Path<T>`, `ObjectLiteral` | Recursive generic types for type-safe path strings |
 
 ## Key Dependencies
 
 | Dependency | Purpose |
 |------------|---------|
-| `rollup` + `@rollup/plugin-swc` | Bundle CJS + ESM outputs |
-| `typescript` | Type checking and declaration emit |
+| `tsdown` (rolldown) | Bundle the ESM output and emit declarations |
+| `typescript` | Type checking (`tsc --noEmit`) |
 | `vitest` + `@vitest/coverage-v8` | Test runner and coverage |
-| `eslint` + `@tada5hi/eslint-config-typescript` | Linting |
-| `husky` + `commitlint` | Git hooks and commit message validation |
+| `eslint` + `@tada5hi/eslint-config` | Linting |
+| `husky` + `@commitlint/cli` | Git hooks and commit message validation |

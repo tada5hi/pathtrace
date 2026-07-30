@@ -18,7 +18,14 @@ Traversal: obj → obj.user → obj.user.roles → obj.user.roles[0] → obj.use
 
 ### Security: Prototype Pollution Prevention
 
-`pathToArray()` filters dangerous keys (`constructor`, `__proto__`, `prototype`) to prevent prototype pollution attacks. This is enforced in `src/helpers/path-to-array.ts`.
+Unsafe segments (`__proto__`, `constructor`, `prototype`) are **kept** by `pathToArray()` and
+rejected during traversal instead — dropping them at parse time would silently turn
+`a.__proto__.b` into `a.b`, resolving a different path rather than refusing the requested one.
+
+- `src/utils/is-unsafe-key.ts` — the key set
+- `src/utils/has-own-entry.ts` — rejects unsafe keys and universally inherited members
+  (`toString`, `valueOf`, …) while still resolving own properties and prototype accessors
+- `setPathValue()`/`removePath()` stop the walk when they hit an unsafe segment
 
 ### Escape Handling
 
@@ -57,10 +64,16 @@ info.exists  // Whether the path resolves to a value
 
 ## setPathValue Auto-Creation
 
-`setPathValue()` creates intermediate objects or arrays as needed based on the next key type:
-- If the next key is a number → creates an array
-- If the next key is a string → creates an object
+`setPathValue()` creates intermediate objects or arrays as needed. The container kind is decided
+by the **next** segment, not the current one:
+- If the next segment is a canonical array index (`String(ToUint32(key)) === key`, below 2^32 - 1) → creates an array
+- Otherwise → creates an object
 
-## Dual Module Output
+A digit-only test is not enough: `'01'`, `'007'` and `'4294967295'` are ordinary string
+properties, and hanging them off an array produces non-index properties that `JSON.stringify`
+and `structuredClone` discard.
 
-The build produces both CommonJS (`dist/index.cjs`) and ESM (`dist/index.mjs`) bundles via Rollup, with TypeScript declarations (`dist/index.d.ts`). The `package.json` exports map handles resolution for both module systems.
+## Module Output
+
+The build is ESM-only: `tsdown` (rolldown) produces `dist/index.mjs` plus declarations
+(`dist/index.d.mts`) and a source map. The `package.json` exports map points at both.

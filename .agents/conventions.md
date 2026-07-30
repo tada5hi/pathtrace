@@ -5,12 +5,14 @@
 - **Indentation**: 4 spaces
 - **Line endings**: LF
 - **Charset**: UTF-8
-- **Linter**: ESLint with `@tada5hi/eslint-config-typescript`
-- **Lint command**: `npm run lint` (checks `src/` and `test/`)
+- **Linter**: ESLint with `@tada5hi/eslint-config`
+- **Lint command**: `npm run lint` (checks the whole repo, `dist/` excluded)
+- **Object literals**: `@stylistic/object-curly-newline` keeps literals with fewer than three
+  properties on a single line — `npm run lint:fix` rewrites them, so do not hand-format against it
 
 ## Commit Messages
 
-Uses **Conventional Commits** enforced by commitlint + Husky:
+Uses **Conventional Commits**, enforced by `@commitlint/cli` from the Husky `commit-msg` hook:
 
 ```
 type(scope): description
@@ -26,21 +28,21 @@ Examples from this repo:
 ## Build
 
 ```bash
-npm run build    # Rollup produces dist/index.cjs, dist/index.mjs, dist/index.d.ts
+npm run build    # tsdown produces dist/index.mjs, dist/index.mjs.map, dist/index.d.mts
 ```
 
-- Bundler: Rollup with SWC plugin
-- Config: `rollup.config.mjs`
-- TypeScript declarations emitted via `tsc --emitDeclarationOnly`
+- Bundler: `tsdown` (rolldown)
+- Config: `tsdown.config.ts`
+- The build does **not** type check — `npm run typecheck` (`tsc --noEmit`) is the separate gate
 
 ## CI/CD
 
 **Main workflow** (`.github/workflows/main.yml`): Runs on push/PR to `master`, `develop`, `next`, `beta`, `alpha`.
-- Steps: install → build → lint → test
+- Jobs: install → build → typecheck / lint / test (`npm run test:coverage`)
 
 **Release workflow** (`.github/workflows/release.yml`): Runs on push to `master`.
 - Uses `release-please` for automated version bumps, changelog generation, and GitHub releases
-- Publishes to npm via `workspaces-publish`
+- Publishes to npm via `tada5hi/monoship`
 
 ## Module Pattern
 

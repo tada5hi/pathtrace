@@ -3,15 +3,15 @@
 ## Setup
 
 - **Framework**: Vitest 4.x
-- **Transpiler**: SWC (via unplugin-swc/vite)
-- **Coverage**: @vitest/coverage-v8
-- **Config**: `test/vitest.config.ts`
+- **Coverage**: @vitest/coverage-v8, 80% threshold on branches/functions/lines/statements
+- **Config**: `test/vitest.config.ts` — passed explicitly via `--config`, since it does not sit at the project root
 
 ## Commands
 
 ```bash
-npm run test              # Run all tests with type checking
-npm run test:coverage     # Run with coverage report
+npm run test              # Run all tests
+npm run test:coverage     # Run with coverage report (thresholds enforced, used in CI)
+npm run typecheck         # tsc --noEmit over src/ and test/
 ```
 
 ## Test Organization
@@ -33,5 +33,6 @@ All tests live in `test/unit/` with the naming convention `*.spec.ts`. Each spec
 
 - Tests use Vitest's `describe`/`it`/`expect` API
 - Each function has its own spec file — follow this pattern for new functions
-- Tests run with `NODE_ENV=test` and `--typecheck` enabled
+- `path.spec.ts` asserts types via `assertType`, which is a no-op at runtime — those
+  assertions are validated by `npm run typecheck`, not by the test run
 - No mocking — tests operate on plain objects directly
