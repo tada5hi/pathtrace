@@ -12,17 +12,9 @@ describe('getPathValue', () => {
     it('returns the correct value', () => {
         const object = {
             hello: 'universe',
-            universe: {
-                hello: 'world',
-            },
+            universe: { hello: 'world' },
             world: ['hello', 'universe'],
-            complex: [{
-                hello: 'universe' 
-            }, {
-                universe: 'world' 
-            }, [{
-                hello: 'world' 
-            }]],
+            complex: [{ hello: 'universe' }, { universe: 'world' }, [{ hello: 'world' }]],
         };
 
         const arr = [[true]];
@@ -51,9 +43,7 @@ describe('avoid prototype pollution vulnerability', () => {
     });
 
     it('exclude __proto__ at non-first position via array path', () => {
-        const obj = {
-            a: {},
-        };
+        const obj = { a: {} };
         expect(getPathValue(obj, ['a', '__proto__', 'constructor'])).toBeUndefined();
     });
 
@@ -68,11 +58,7 @@ describe('avoid prototype pollution vulnerability', () => {
     });
 
     it('should not resolve a neighbouring path when a segment is unsafe', () => {
-        const obj = {
-            a: {
-                b: 'safe' 
-            } 
-        };
+        const obj = { a: { b: 'safe' } };
 
         // Dropping `__proto__` would leave `a.b`, silently answering a
         // different question than the one that was asked.
@@ -96,21 +82,17 @@ describe('inherited members', () => {
         ['hasOwnProperty'],
         ['isPrototypeOf'],
     ])('should not resolve the inherited member %s', (key) => {
-        expect(getPathValue({
-            a: {} 
-        }, `a.${key}`)).toBeUndefined();
+        expect(getPathValue({ a: {} }, `a.${key}`)).toBeUndefined();
     });
 
     it('should resolve an accessor declared on a user prototype', () => {
         const prototype = {};
         Object.defineProperty(prototype, 'id', {
             get: () => 'abc',
-            configurable: true 
+            configurable: true,
         });
 
-        expect(getPathValue({
-            identity: Object.create(prototype) 
-        }, 'identity.id')).toEqual('abc');
+        expect(getPathValue({ identity: Object.create(prototype) }, 'identity.id')).toEqual('abc');
     });
 
     it('should still resolve own properties of boxed primitives', () => {
@@ -120,10 +102,6 @@ describe('inherited members', () => {
     });
 
     it('should still resolve an own property shadowing an inherited one', () => {
-        expect(getPathValue({
-            a: {
-                toString: 'mine' 
-            } 
-        }, 'a.toString')).toEqual('mine');
+        expect(getPathValue({ a: { toString: 'mine' } }, 'a.toString')).toEqual('mine');
     });
 });

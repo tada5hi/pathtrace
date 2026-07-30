@@ -34,16 +34,12 @@ describe('removePath', () => {
         removePath(object, 'universe.foo');
         removePath(object, 'world[1]');
 
-        expect(object.universe).toEqual({
-            hello: 'world',
-        });
+        expect(object.universe).toEqual({ hello: 'world' });
         expect(object.world).toEqual(['hello']);
     });
 
     it('should not remove non existent path', () => {
-        const object = {
-            hello: 'universe',
-        };
+        const object = { hello: 'universe' };
 
         removePath(object, 'foo.bar');
 
@@ -72,9 +68,7 @@ describe('avoid prototype pollution vulnerability', () => {
     });
 
     it('exclude __proto__ at non-first position via array path', () => {
-        const obj : Record<string, any> = {
-            a: {},
-        };
+        const obj : Record<string, any> = { a: {} };
         removePath(obj, ['a', '__proto__', 'toString']);
         expect(obj.a.toString).toBeDefined();
         expect((Object.prototype as any).toString).toBeDefined();
@@ -90,16 +84,10 @@ describe('avoid prototype pollution vulnerability', () => {
 
 describe('unsafe segments do not redirect the removal', () => {
     it('should not remove a neighbouring path', () => {
-        const obj : Record<string, any> = {
-            a: {
-                x: 1 
-            } 
-        };
+        const obj : Record<string, any> = { a: { x: 1 } };
 
         removePath(obj, 'a.__proto__.x');
 
-        expect(obj.a).toEqual({
-            x: 1 
-        });
+        expect(obj.a).toEqual({ x: 1 });
     });
 });

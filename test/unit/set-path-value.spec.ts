@@ -28,35 +28,25 @@ describe('setPathValue', () => {
     });
 
     it('allows value to be re-set in simple object', () => {
-        const obj : any = {
-            hello: 'world' 
-        };
+        const obj : any = { hello: 'world' };
         setPathValue(obj, 'hello', 'universe');
         expect(obj.hello).toEqual('universe');
     });
 
     it('allows value to be set in complex object', () => {
-        const obj : any = {
-            hello: {} 
-        };
+        const obj : any = { hello: {} };
         setPathValue(obj, 'hello.universe', 42);
         expect(obj.hello.universe).toEqual(42);
     });
 
     it('allows value to be re-set in complex object', () => {
-        const obj = {
-            hello: {
-                universe: 100 
-            } 
-        };
+        const obj = { hello: { universe: 100 } };
         setPathValue(obj, 'hello.universe', 42);
         expect(obj.hello.universe).toEqual(42);
     });
 
     it('allows for value to be set in array', () => {
-        const obj = {
-            hello: [] 
-        };
+        const obj = { hello: [] };
         setPathValue(obj, 'hello[0]', 1);
         setPathValue(obj, 'hello[2]', 3);
 
@@ -66,20 +56,14 @@ describe('setPathValue', () => {
     });
 
     it('allows setting a value into an object inside an array', () => {
-        const obj : any = {
-            hello: [{
-                anObject: 'obj' 
-            }] 
-        };
+        const obj : any = { hello: [{ anObject: 'obj' }] };
         setPathValue(obj, 'hello[0].anotherKey', 'anotherValue');
 
         expect(obj.hello[0].anotherKey).toEqual('anotherValue');
     });
 
     it('allows for value to be re-set in array', () => {
-        const obj = {
-            hello: [1, 2, 4] 
-        };
+        const obj = { hello: [1, 2, 4] };
         setPathValue(obj, 'hello[2]', 3);
 
         expect(obj.hello[0]).toEqual(1);
@@ -88,9 +72,7 @@ describe('setPathValue', () => {
     });
 
     it('returns the object in which the value was set', () => {
-        const obj = {
-            hello: [1, 2, 4] 
-        };
+        const obj = { hello: [1, 2, 4] };
         const valueReturned = setPathValue(obj, 'hello[2]', 3);
         expect(obj).toEqual(valueReturned);
     });
@@ -107,11 +89,7 @@ describe('intermediate container kind', () => {
         setPathValue(obj, 'items.0.name', 'x');
 
         expect(Array.isArray(obj.items)).toBe(true);
-        expect(obj).toEqual({
-            items: [{
-                name: 'x' 
-            }] 
-        });
+        expect(obj).toEqual({ items: [{ name: 'x' }] });
     });
 
     it('creates an array for bracket notation too', () => {
@@ -119,11 +97,7 @@ describe('intermediate container kind', () => {
         setPathValue(obj, 'a[0].b', 1);
 
         expect(Array.isArray(obj.a)).toBe(true);
-        expect(obj).toEqual({
-            a: [{
-                b: 1 
-            }] 
-        });
+        expect(obj).toEqual({ a: [{ b: 1 }] });
     });
 
     it('creates a plain object when the next segment is not numeric', () => {
@@ -131,13 +105,7 @@ describe('intermediate container kind', () => {
         setPathValue(obj, 'a.b.c', 1);
 
         expect(Array.isArray(obj.a)).toBe(false);
-        expect(obj).toEqual({
-            a: {
-                b: {
-                    c: 1 
-                } 
-            } 
-        });
+        expect(obj).toEqual({ a: { b: { c: 1 } } });
     });
 
     it('treats a leading-zero segment as an object key, not an index', () => {
@@ -149,20 +117,8 @@ describe('intermediate container kind', () => {
         setPathValue(obj, 'items.01.name', 'V');
 
         expect(Array.isArray(obj.items)).toBe(false);
-        expect(obj).toEqual({
-            items: {
-                '01': {
-                    name: 'V' 
-                } 
-            } 
-        });
-        expect(JSON.parse(JSON.stringify(obj))).toEqual({
-            items: {
-                '01': {
-                    name: 'V' 
-                } 
-            } 
-        });
+        expect(obj).toEqual({ items: { '01': { name: 'V' } } });
+        expect(JSON.parse(JSON.stringify(obj))).toEqual({ items: { '01': { name: 'V' } } });
     });
 
     it('treats other non-canonical digit segments as object keys', () => {
@@ -172,13 +128,7 @@ describe('intermediate container kind', () => {
 
             expect(Array.isArray(obj.items)).toBe(false);
             // 4294967295 is 2^32-1, one past the largest valid index.
-            expect(JSON.parse(JSON.stringify(obj))).toEqual({
-                items: {
-                    [segment]: {
-                        x: 'V' 
-                    } 
-                } 
-            });
+            expect(JSON.parse(JSON.stringify(obj))).toEqual({ items: { [segment]: { x: 'V' } } });
         }
     });
 
@@ -190,9 +140,7 @@ describe('intermediate container kind', () => {
         setPathValue(obj, 'items.4294967294.x', 'V');
 
         expect(Array.isArray(obj.items)).toBe(true);
-        expect(obj.items[4294967294]).toEqual({
-            x: 'V' 
-        });
+        expect(obj.items[4294967294]).toEqual({ x: 'V' });
     });
 
     it('survives a JSON round-trip', () => {
@@ -203,16 +151,8 @@ describe('intermediate container kind', () => {
         const obj: Record<string, any> = {};
         setPathValue(obj, 'items.0.name', 'alpha');
 
-        expect(JSON.parse(JSON.stringify(obj))).toEqual({
-            items: [{
-                name: 'alpha' 
-            }] 
-        });
-        expect(structuredClone(obj)).toEqual({
-            items: [{
-                name: 'alpha' 
-            }] 
-        });
+        expect(JSON.parse(JSON.stringify(obj))).toEqual({ items: [{ name: 'alpha' }] });
+        expect(structuredClone(obj)).toEqual({ items: [{ name: 'alpha' }] });
     });
 
     it('keeps a deep mixed path structurally correct', () => {
@@ -221,35 +161,23 @@ describe('intermediate container kind', () => {
 
         // The hole at `b[0]` serializes as null, per JSON semantics.
         expect(JSON.parse(JSON.stringify(obj)))
-            .toEqual({
-                a: [{
-                    b: [null, {
-                        c: 'deep' 
-                    }] 
-                }] 
-            });
+            .toEqual({ a: [{ b: [null, { c: 'deep' }] }] });
     });
 
     it('does not replace an existing object intermediate', () => {
-        const obj: Record<string, any> = {
-            a: {
-                keep: 1 
-            } 
-        };
+        const obj: Record<string, any> = { a: { keep: 1 } };
         setPathValue(obj, 'a.b', 2);
 
         expect(obj).toEqual({
             a: {
                 keep: 1,
-                b: 2 
-            } 
+                b: 2,
+            },
         });
     });
 
     it('does not replace an existing array intermediate', () => {
-        const obj: Record<string, any> = {
-            a: [10, 20] 
-        };
+        const obj: Record<string, any> = { a: [10, 20] };
         setPathValue(obj, 'a.0', 99);
 
         expect(Array.isArray(obj.a)).toBe(true);
@@ -264,48 +192,28 @@ describe('non-traversable intermediates', () => {
     // to signal it. `{ address: null }` is ordinary initial state.
 
     it('replaces a null intermediate instead of dropping the write', () => {
-        const obj: Record<string, any> = {
-            a: null 
-        };
+        const obj: Record<string, any> = { a: null };
         setPathValue(obj, 'a.b', 1);
 
-        expect(obj).toEqual({
-            a: {
-                b: 1 
-            } 
-        });
+        expect(obj).toEqual({ a: { b: 1 } });
     });
 
     it('replaces a string intermediate', () => {
-        const obj: Record<string, any> = {
-            a: 'str' 
-        };
+        const obj: Record<string, any> = { a: 'str' };
         setPathValue(obj, 'a.b', 1);
 
-        expect(obj).toEqual({
-            a: {
-                b: 1 
-            } 
-        });
+        expect(obj).toEqual({ a: { b: 1 } });
     });
 
     it('replaces a numeric intermediate', () => {
-        const obj: Record<string, any> = {
-            a: 0 
-        };
+        const obj: Record<string, any> = { a: 0 };
         setPathValue(obj, 'a.b', 1);
 
-        expect(obj).toEqual({
-            a: {
-                b: 1 
-            } 
-        });
+        expect(obj).toEqual({ a: { b: 1 } });
     });
 
     it('replaces a null intermediate with an array when indexed numerically', () => {
-        const obj: Record<string, any> = {
-            a: null 
-        };
+        const obj: Record<string, any> = { a: null };
         setPathValue(obj, 'a.0', 'first');
 
         expect(Array.isArray(obj.a)).toBe(true);
@@ -313,14 +221,10 @@ describe('non-traversable intermediates', () => {
     });
 
     it('still overwrites a primitive at the final segment', () => {
-        const obj: Record<string, any> = {
-            a: 'str' 
-        };
+        const obj: Record<string, any> = { a: 'str' };
         setPathValue(obj, 'a', 'replaced');
 
-        expect(obj).toEqual({
-            a: 'replaced' 
-        });
+        expect(obj).toEqual({ a: 'replaced' });
     });
 });
 
@@ -356,9 +260,7 @@ describe('avoid prototype pollution vulnerability', () => {
     });
 
     it('exclude __proto__ at non-first position via array path', () => {
-        const obj : Record<string, any> = {
-            a: {},
-        };
+        const obj : Record<string, any> = { a: {} };
         setPathValue(obj, ['a', '__proto__', 'polluted'], 'yes');
         expect(obj.a.polluted).toBeUndefined();
         expect((Object.prototype as any).polluted).toBeUndefined();
@@ -381,9 +283,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
 describe('unsafe segments do not redirect the write', () => {
     it('should not write to a neighbouring path', () => {
-        const obj : Record<string, any> = {
-            a: {} 
-        };
+        const obj : Record<string, any> = { a: {} };
 
         // Dropping `__proto__` would leave `a.x`, writing somewhere the
         // caller never named.

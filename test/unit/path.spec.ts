@@ -11,9 +11,7 @@ import type { Path } from '../../src';
 
 describe('path', () => {
     it('should work with simple object', () => {
-        const ob = {
-            hello: 'universe',
-        } as const;
+        const ob = { hello: 'universe' } as const;
 
         assertType<Path<typeof ob>>('hello');
 
@@ -22,9 +20,7 @@ describe('path', () => {
     });
 
     it('should work with simple array', () => {
-        const ob = {
-            hello: ['universe'],
-        } as const;
+        const ob = { hello: ['universe'] } as const;
 
         assertType<Path<typeof ob>>('hello');
 
@@ -33,11 +29,7 @@ describe('path', () => {
     });
 
     it('should work with simple nested object', () => {
-        const ob = {
-            universe: {
-                hello: 'world',
-            },
-        } as const;
+        const ob = { universe: { hello: 'world' } } as const;
 
         assertType<Path<typeof ob>>('universe');
         assertType<Path<typeof ob>>('universe.hello');
@@ -47,9 +39,7 @@ describe('path', () => {
     });
 
     it('should work with simple object and array value', () => {
-        const ob = {
-            world: ['hello', 'universe'],
-        } as const;
+        const ob = { world: ['hello', 'universe'] } as const;
 
         assertType<Path<typeof ob>>('world');
         assertType<Path<typeof ob>>('world[0]');
@@ -61,16 +51,10 @@ describe('path', () => {
     it('should work with complex object', () => {
         const ob = {
             complex: [
-                {
-                    hello: 'universe' 
-                },
-                {
-                    universe: 'world' 
-                },
+                { hello: 'universe' },
+                { universe: 'world' },
                 [
-                    {
-                        hello: 'world' 
-                    },
+                    { hello: 'world' },
                 ],
             ],
         } as const;
