@@ -33,19 +33,29 @@ export function setPathValue(
             break;
         }
 
-        // [foo, '0']
-        if (typeof temp[key] === 'undefined') {
-            const match = NUMBER_REGEX.test(key);
-            if (match) {
-                (temp as Record<string, any>)[key] = [];
-            } else {
-                temp[key] = {};
-            }
-        }
-
         if (index === parts.length - 1) {
             temp[key] = value;
             break;
+        }
+
+        // Materialize the intermediate this key points at.
+        //
+        // The container kind is decided by the *next* segment, not this one:
+        // a numeric next segment means the slot is about to be indexed
+        // numerically, so it has to be an array. Reading the current key
+        // instead would build `{ a: { '0': [] } }` for `a[0].b` — an array
+        // at the index, with `b` hung off it as a non-index property, which
+        // JSON.stringify and structuredClone both discard.
+        const existing = temp[key];
+        if (!isObject(existing) && !Array.isArray(existing)) {
+            // Same "can this be descended into?" test the loop head uses.
+            // Covers `undefined` (absent) as well as a pre-existing
+            // primitive. Replacing a primitive matches lodash `_.set` and
+            // the caller's explicit intent; leaving it in place made the
+            // write vanish with no signal.
+            (temp as Record<string, any>)[key] = NUMBER_REGEX.test(parts[index + 1] as string) ?
+                [] :
+                {};
         }
 
         index++;
