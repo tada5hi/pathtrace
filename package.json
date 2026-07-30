@@ -20,10 +20,12 @@
     },
     "scripts": {
         "build": "tsdown",
-        "test": "vitest run",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run --config test/vitest.config.ts",
+        "test:coverage": "vitest run --config test/vitest.config.ts --coverage",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
-        "prepare": "husky install"
+        "prepare": "husky"
     },
     "keywords": [
         "path",
@@ -50,6 +52,7 @@
     },
     "homepage": "https://github.com/tada5hi/pathtrace#readme",
     "devDependencies": {
+        "@commitlint/cli": "^20.5.3",
         "@tada5hi/commitlint-config": "^1.3.1",
         "@tada5hi/eslint-config": "^2.3.1",
         "@tada5hi/tsconfig": "^0.7.2",
