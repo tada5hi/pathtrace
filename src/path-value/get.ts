@@ -24,15 +24,17 @@ export function getPathValue(
             break;
         }
 
+        const part = parts[index] as PropertyKey;
+
         // Own, safe entries only — an unsafe segment or an inherited member
         // ends the traversal instead of resolving to something else.
-        if (!hasOwnEntry(temp, parts[index])) {
+        if (!hasOwnEntry(temp, part)) {
             break;
         }
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
-        temp = temp[parts[index]];
+        temp = temp[part];
 
         if (index === parts.length - 1) {
             res = temp;

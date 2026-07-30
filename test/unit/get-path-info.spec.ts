@@ -16,9 +16,7 @@ describe('getPathInfo', () => {
             units: 'mm',
             lengths: [[1.2, 3.5], [2.2, 1.5], [5, 7]],
         },
-        'dimensions.lengths': {
-            '[2]': [1.2, 3.5],
-        },
+        'dimensions.lengths': { '[2]': [1.2, 3.5] },
     };
 
     it('should handle simple property', () => {
@@ -72,7 +70,7 @@ describe('getPathInfo', () => {
             expect(info.parent.value).toEqual(obj.dimensions.lengths[2]);
             expect(info.parent.exists).toBeTruthy();
         }
-        expect(info.value).toEqual(obj.dimensions.lengths[2][1]);
+        expect(info.value).toEqual(obj.dimensions.lengths[2]?.[1]);
         expect(info.name).toEqual(1);
         expect(info.exists).toBeTruthy();
     });
@@ -152,7 +150,7 @@ function withPrototypeAccessor(key: string, value: unknown, levels = 1) : object
     let prototype : object = {};
     Object.defineProperty(prototype, key, {
         get: () => value,
-        configurable: true 
+        configurable: true,
     });
 
     for (let i = 1; i < levels; i++) {
@@ -164,10 +162,8 @@ function withPrototypeAccessor(key: string, value: unknown, levels = 1) : object
 
 describe('unsafe segments', () => {
     const data = {
-        a: {
-            b: 'safe' 
-        },
-        secret: 'top' 
+        a: { b: 'safe' },
+        secret: 'top',
     };
 
     it.each([
@@ -204,18 +200,14 @@ describe('inherited members', () => {
         ['valueOf'],
         ['hasOwnProperty'],
     ])('should not report the inherited member %s as existing', (key) => {
-        const info = getPathInfo({
-            a: {} 
-        }, `a.${key}`);
+        const info = getPathInfo({ a: {} }, `a.${key}`);
 
         expect(info.exists).toBe(false);
         expect(info.value).toBeUndefined();
     });
 
     it('should report an own property whose value is undefined as existing', () => {
-        const info = getPathInfo({
-            a: undefined 
-        }, 'a');
+        const info = getPathInfo({ a: undefined }, 'a');
 
         expect(info.exists).toBe(true);
     });
@@ -237,9 +229,7 @@ describe('inherited members', () => {
     });
 
     it('should not report a missing index 0 as existing via a string path', () => {
-        const info = getPathInfo({
-            a: [] 
-        }, 'a[0]');
+        const info = getPathInfo({ a: [] }, 'a[0]');
 
         expect(info.exists).toBe(false);
         expect(info.value).toBeUndefined();
@@ -255,9 +245,7 @@ describe('inherited members', () => {
     it('should resolve an accessor declared on a user prototype', () => {
         // A getter on a class is data at the call site — indistinguishable from
         // a field — unlike anything inherited from Object.prototype.
-        const info = getPathInfo({
-            identity: withPrototypeAccessor('id', 'abc') 
-        }, 'identity.id');
+        const info = getPathInfo({ identity: withPrototypeAccessor('id', 'abc') }, 'identity.id');
 
         expect(info.exists).toBe(true);
         expect(info.value).toEqual('abc');
@@ -265,9 +253,7 @@ describe('inherited members', () => {
 
     it('should resolve an accessor inherited through a subclass chain', () => {
         const identity = withPrototypeAccessor('realmId', 'master', 3);
-        const info = getPathInfo({
-            identity 
-        }, 'identity.realmId');
+        const info = getPathInfo({ identity }, 'identity.realmId');
 
         expect(info.exists).toBe(true);
         expect(info.value).toEqual('master');
@@ -282,15 +268,11 @@ describe('inherited members', () => {
             configurable: true,
         });
 
-        expect(getPathInfo({
-            o: Object.create(foreignPrototype) 
-        }, 'o.toString').exists).toBe(false);
+        expect(getPathInfo({ o: Object.create(foreignPrototype) }, 'o.toString').exists).toBe(false);
     });
 
     it('should not resolve a universally inherited member on such an object', () => {
-        const info = getPathInfo({
-            identity: withPrototypeAccessor('id', 'abc') 
-        }, 'identity.toString');
+        const info = getPathInfo({ identity: withPrototypeAccessor('id', 'abc') }, 'identity.toString');
 
         expect(info.exists).toBe(false);
     });

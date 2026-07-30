@@ -50,7 +50,7 @@ export class PathInfo {
 
     get name() : PropertyKey | null {
         if (this.pathParts.length > 0) {
-            return this.pathParts[this.pathParts.length - 1];
+            return this.pathParts[this.pathParts.length - 1] ?? null;
         }
 
         return null;

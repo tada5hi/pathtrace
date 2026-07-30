@@ -27,8 +27,10 @@ function expandPathVerboseInternal(
         ];
     }
 
+    // `segments` is non-empty here, so the `undefined` case is unreachable —
+    // it only exists because index access is not narrowed by the length check.
     const key = segments[0];
-    if (typeof key === 'symbol') {
+    if (typeof key === 'undefined' || typeof key === 'symbol') {
         return [];
     }
 
@@ -62,7 +64,7 @@ function expandPathVerboseInternal(
         // return the entire path
         return [{
             value: arrayToPath([...currPath, ...segments]),
-            matches: currMatches 
+            matches: currMatches,
         }];
     }
 
