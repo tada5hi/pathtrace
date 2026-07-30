@@ -96,6 +96,234 @@ describe('setPathValue', () => {
     });
 });
 
+describe('intermediate container kind', () => {
+    // The container created at a key must be decided by the *next* segment.
+    // Deciding from the current key builds `{ a: { '0': [] } }` for `a[0].b`:
+    // structurally wrong, and the value is hung off an array as a non-index
+    // property, so it survives a property read but not serialization.
+
+    it('creates an array when the next segment is numeric', () => {
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'items.0.name', 'x');
+
+        expect(Array.isArray(obj.items)).toBe(true);
+        expect(obj).toEqual({
+            items: [{
+                name: 'x' 
+            }] 
+        });
+    });
+
+    it('creates an array for bracket notation too', () => {
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'a[0].b', 1);
+
+        expect(Array.isArray(obj.a)).toBe(true);
+        expect(obj).toEqual({
+            a: [{
+                b: 1 
+            }] 
+        });
+    });
+
+    it('creates a plain object when the next segment is not numeric', () => {
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'a.b.c', 1);
+
+        expect(Array.isArray(obj.a)).toBe(false);
+        expect(obj).toEqual({
+            a: {
+                b: {
+                    c: 1 
+                } 
+            } 
+        });
+    });
+
+    it('treats a leading-zero segment as an object key, not an index', () => {
+        // '01' matches /^\d+$/ but is NOT a canonical array index —
+        // String(ToUint32('01')) is '1', not '01'. Creating an array here
+        // would hang `name` off it as a non-index property, which is exactly
+        // the serialization loss this change exists to prevent.
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'items.01.name', 'V');
+
+        expect(Array.isArray(obj.items)).toBe(false);
+        expect(obj).toEqual({
+            items: {
+                '01': {
+                    name: 'V' 
+                } 
+            } 
+        });
+        expect(JSON.parse(JSON.stringify(obj))).toEqual({
+            items: {
+                '01': {
+                    name: 'V' 
+                } 
+            } 
+        });
+    });
+
+    it('treats other non-canonical digit segments as object keys', () => {
+        for (const segment of ['007', '4294967295', '99999999999999999999']) {
+            const obj: Record<string, any> = {};
+            setPathValue(obj, `items.${segment}.x`, 'V');
+
+            expect(Array.isArray(obj.items)).toBe(false);
+            // 4294967295 is 2^32-1, one past the largest valid index.
+            expect(JSON.parse(JSON.stringify(obj))).toEqual({
+                items: {
+                    [segment]: {
+                        x: 'V' 
+                    } 
+                } 
+            });
+        }
+    });
+
+    it('treats the largest valid index as an index', () => {
+        // 2^32-2 is the last canonical index. Assertions stay targeted: the
+        // resulting sparse array has length 2^32-1, so serializing or deeply
+        // comparing it would be pathological.
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'items.4294967294.x', 'V');
+
+        expect(Array.isArray(obj.items)).toBe(true);
+        expect(obj.items[4294967294]).toEqual({
+            x: 'V' 
+        });
+    });
+
+    it('survives a JSON round-trip', () => {
+        // The regression this guards: non-index properties on an array are
+        // dropped by JSON.stringify and structuredClone, so the value
+        // disappears at any serialization boundary (an API response body,
+        // postMessage, IndexedDB) while still reading back in memory.
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'items.0.name', 'alpha');
+
+        expect(JSON.parse(JSON.stringify(obj))).toEqual({
+            items: [{
+                name: 'alpha' 
+            }] 
+        });
+        expect(structuredClone(obj)).toEqual({
+            items: [{
+                name: 'alpha' 
+            }] 
+        });
+    });
+
+    it('keeps a deep mixed path structurally correct', () => {
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'a.0.b.1.c', 'deep');
+
+        // The hole at `b[0]` serializes as null, per JSON semantics.
+        expect(JSON.parse(JSON.stringify(obj)))
+            .toEqual({
+                a: [{
+                    b: [null, {
+                        c: 'deep' 
+                    }] 
+                }] 
+            });
+    });
+
+    it('does not replace an existing object intermediate', () => {
+        const obj: Record<string, any> = {
+            a: {
+                keep: 1 
+            } 
+        };
+        setPathValue(obj, 'a.b', 2);
+
+        expect(obj).toEqual({
+            a: {
+                keep: 1,
+                b: 2 
+            } 
+        });
+    });
+
+    it('does not replace an existing array intermediate', () => {
+        const obj: Record<string, any> = {
+            a: [10, 20] 
+        };
+        setPathValue(obj, 'a.0', 99);
+
+        expect(Array.isArray(obj.a)).toBe(true);
+        expect(obj.a).toEqual([99, 20]);
+    });
+});
+
+describe('non-traversable intermediates', () => {
+    // Previously the guard was `typeof temp[key] === 'undefined'`, so a
+    // pre-existing null or primitive was neither replaced nor traversable —
+    // the loop bailed and the write vanished with no return value or throw
+    // to signal it. `{ address: null }` is ordinary initial state.
+
+    it('replaces a null intermediate instead of dropping the write', () => {
+        const obj: Record<string, any> = {
+            a: null 
+        };
+        setPathValue(obj, 'a.b', 1);
+
+        expect(obj).toEqual({
+            a: {
+                b: 1 
+            } 
+        });
+    });
+
+    it('replaces a string intermediate', () => {
+        const obj: Record<string, any> = {
+            a: 'str' 
+        };
+        setPathValue(obj, 'a.b', 1);
+
+        expect(obj).toEqual({
+            a: {
+                b: 1 
+            } 
+        });
+    });
+
+    it('replaces a numeric intermediate', () => {
+        const obj: Record<string, any> = {
+            a: 0 
+        };
+        setPathValue(obj, 'a.b', 1);
+
+        expect(obj).toEqual({
+            a: {
+                b: 1 
+            } 
+        });
+    });
+
+    it('replaces a null intermediate with an array when indexed numerically', () => {
+        const obj: Record<string, any> = {
+            a: null 
+        };
+        setPathValue(obj, 'a.0', 'first');
+
+        expect(Array.isArray(obj.a)).toBe(true);
+        expect(obj.a).toEqual(['first']);
+    });
+
+    it('still overwrites a primitive at the final segment', () => {
+        const obj: Record<string, any> = {
+            a: 'str' 
+        };
+        setPathValue(obj, 'a', 'replaced');
+
+        expect(obj).toEqual({
+            a: 'replaced' 
+        });
+    });
+});
+
 describe('avoid prototype pollution vulnerability', () => {
     it('exclude constructor', () => {
         const obj = {};
