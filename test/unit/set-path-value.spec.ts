@@ -140,6 +140,61 @@ describe('intermediate container kind', () => {
         });
     });
 
+    it('treats a leading-zero segment as an object key, not an index', () => {
+        // '01' matches /^\d+$/ but is NOT a canonical array index —
+        // String(ToUint32('01')) is '1', not '01'. Creating an array here
+        // would hang `name` off it as a non-index property, which is exactly
+        // the serialization loss this change exists to prevent.
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'items.01.name', 'V');
+
+        expect(Array.isArray(obj.items)).toBe(false);
+        expect(obj).toEqual({
+            items: {
+                '01': {
+                    name: 'V' 
+                } 
+            } 
+        });
+        expect(JSON.parse(JSON.stringify(obj))).toEqual({
+            items: {
+                '01': {
+                    name: 'V' 
+                } 
+            } 
+        });
+    });
+
+    it('treats other non-canonical digit segments as object keys', () => {
+        for (const segment of ['007', '4294967295', '99999999999999999999']) {
+            const obj: Record<string, any> = {};
+            setPathValue(obj, `items.${segment}.x`, 'V');
+
+            expect(Array.isArray(obj.items)).toBe(false);
+            // 4294967295 is 2^32-1, one past the largest valid index.
+            expect(JSON.parse(JSON.stringify(obj))).toEqual({
+                items: {
+                    [segment]: {
+                        x: 'V' 
+                    } 
+                } 
+            });
+        }
+    });
+
+    it('treats the largest valid index as an index', () => {
+        // 2^32-2 is the last canonical index. Assertions stay targeted: the
+        // resulting sparse array has length 2^32-1, so serializing or deeply
+        // comparing it would be pathological.
+        const obj: Record<string, any> = {};
+        setPathValue(obj, 'items.4294967294.x', 'V');
+
+        expect(Array.isArray(obj.items)).toBe(true);
+        expect(obj.items[4294967294]).toEqual({
+            x: 'V' 
+        });
+    });
+
     it('survives a JSON round-trip', () => {
         // The regression this guards: non-index properties on an array are
         // dropped by JSON.stringify and structuredClone, so the value
