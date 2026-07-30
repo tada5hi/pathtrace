@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.3](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.2.2...pathtrace-v2.2.3) (2026-07-30)
+
+
+### Bug Fixes
+
+* **types:** resolve type errors under noUncheckedIndexedAccess ([178c0e2](https://github.com/tada5hi/pathtrace/commit/178c0e216739e82aabcbc80fef26cda0cdc9e949))
+
 ## [2.2.2](https://github.com/tada5hi/pathtrace/compare/pathtrace-v2.2.1...pathtrace-v2.2.2) (2026-07-29)
 
 
