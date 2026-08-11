@@ -59,7 +59,7 @@
         "@typescript-eslint/eslint-plugin": "^8.65.0",
         "@typescript-eslint/parser": "^8.65.0",
         "@vitest/coverage-v8": "^4.1.10",
-        "eslint": "^10.8.0",
+        "eslint": "^10.8.1",
         "husky": "^9.1.7",
         "tsdown": "^0.22.14",
         "typescript": "^5.9.3",
