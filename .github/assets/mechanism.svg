@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" role="img" aria-labelledby="pathtrace-title pathtrace-desc">
+<title id="pathtrace-title">Expand a pattern, then read each concrete path</title><desc id="pathtrace-desc">expandPath(data, users.*.name) produces users[0].name and users[1].name. Pass each concrete path to getPathValue to read Ada and Lin. getPathValue itself does not expand wildcards.</desc>
+<style>:root{--panel:#f7f8fc;--card:#ffffff;--text:#20283d;--muted:#526078;--line:#207b85;--accent:#207b85}@media(prefers-color-scheme:dark){:root{--panel:#121a28;--card:#1d293c;--text:#edf3ff;--muted:#bccade;--line:#67d1d5;--accent:#67d1d5}}text{font-family:Arial,sans-serif;fill:var(--text)}.label{font-size:17px;fill:var(--muted)}.heading{font-size:22px;font-weight:700}.code{font-family:monospace;font-size:18px}.card{fill:var(--card);stroke:var(--line);stroke-width:2}.arrow{fill:none;stroke:var(--line);stroke-width:2;marker-end:url(#pathtrace-arrow)}</style>
+<defs><marker id="pathtrace-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--line)"/></marker></defs>
+<rect x="2" y="2" width="956" height="356" rx="20" fill="var(--panel)"/>
+<text x="30" y="42" class="heading">A wildcard selects paths, then you choose the operation</text>
+<rect x="30" y="80" width="330" height="190" rx="12" class="card"/><text x="50" y="116" class="code">users: [</text><text x="70" y="151" class="code">{ name: 'Ada' },</text><text x="70" y="186" class="code">{ name: 'Lin' }</text><text x="50" y="221" class="code">]</text><text x="50" y="251" class="label">expandPath(data, 'users.*.name')</text>
+<path d="M360 165H410V121H460" class="arrow"/><path d="M410 165V226H460" class="arrow"/>
+<rect x="465" y="80" width="460" height="83" rx="12" class="card"/><text x="485" y="113" class="code">users[0].name</text><text x="485" y="143" class="label">getPathValue(data, path) → Ada</text>
+<rect x="465" y="185" width="460" height="83" rx="12" class="card"/><text x="485" y="218" class="code">users[1].name</text><text x="485" y="248" class="label">getPathValue(data, path) → Lin</text>
+<rect x="30" y="290" width="895" height="43" rx="12" class="card"/><text x="50" y="318" class="label">getPathValue, setPathValue and removePath operate on one concrete path.</text>
+</svg>
