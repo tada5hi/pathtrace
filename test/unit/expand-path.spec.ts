@@ -14,6 +14,7 @@ describe('expandPath', () => {
         it('should select all shallow paths', () => {
             const obj = { foo: ['bar', 'baz'] };
             const paths = expandPathVerbose(obj, 'foo.*');
+
             expect(paths).toEqual([
                 {
                     value: 'foo[0]',
@@ -29,12 +30,14 @@ describe('expandPath', () => {
         it('should select all shallow paths (simple)', () => {
             const obj = { foo: ['bar', 'baz'] };
             const paths = expandPath(obj, 'foo.*');
+
             expect(paths).toEqual(['foo[0]', 'foo[1]']);
         });
 
         it('should select all shallow paths when path is just the wildcard', () => {
             const obj = ['bar', 'baz'];
             const paths = expandPathVerbose(obj, '*');
+
             expect(paths).toEqual([
                 {
                     value: '[0]',
@@ -70,6 +73,7 @@ describe('expandPath', () => {
                 },
             };
             const paths = expandPathVerbose(obj, 'foo.*.a');
+
             expect(paths).toEqual([
                 {
                     value: 'foo.bar.a',

@@ -17,6 +17,7 @@ function expandPathVerboseInternal(
     currMatches: readonly (string | string[])[] = [],
 ): PathExpanded[] {
     const segments = Array.isArray(path) ? path : pathToArray(path);
+
     if (!segments.length) {
         // no more paths to traverse
         return [
@@ -30,6 +31,7 @@ function expandPathVerboseInternal(
     // `segments` is non-empty here, so the `undefined` case is unreachable —
     // it only exists because index access is not narrowed by the length check.
     const key = segments[0];
+
     if (typeof key === 'undefined' || typeof key === 'symbol') {
         return [];
     }
@@ -93,6 +95,7 @@ function expandPathVerboseInternal(
 
                 const pathMatches : string[] = [];
                 const output : PathExpanded[] = [];
+
                 for (const child of children) {
                     /* istanbul ignore next */
                     if (pathMatches.includes(child.value)) {

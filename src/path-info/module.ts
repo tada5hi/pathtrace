@@ -63,6 +63,7 @@ export class PathInfo {
 
         if (this.pathParts.length === 0) {
             this._parent = null;
+
             return this._parent;
         }
 
@@ -88,6 +89,7 @@ export class PathInfo {
         // and `''`, reporting a missing index 0 as an existing path.
         if (this.name === null || !this.parent) {
             this._exists = true;
+
             return this._exists;
         }
 

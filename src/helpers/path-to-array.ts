@@ -31,6 +31,7 @@ export function pathToArray(segment: PropertyKey) : PropertyKey[] {
 
     const str = segment.replace(/([^\\])\[/g, '$1.[');
     const parts = str.match(/(\\\.|[^.]+?)+/g);
+
     if (!parts) {
         return [];
     }
@@ -39,6 +40,7 @@ export function pathToArray(segment: PropertyKey) : PropertyKey[] {
 
     for (const part of parts) {
         const regex = BRACKET_NUMBER_REGEX.exec(part);
+
         if (regex) {
             result.push(Number(regex[1]));
         } else {
