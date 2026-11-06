@@ -2,7 +2,7 @@
 
 ## Setup
 
-- **Framework**: Vitest 4.x
+- **Framework**: Vitest 5.x
 - **Coverage**: @vitest/coverage-v8, 80% threshold on branches/functions/lines/statements
 - **Config**: `test/vitest.config.ts` — passed explicitly via `--config`, since it does not sit at the project root
 

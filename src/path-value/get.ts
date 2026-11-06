@@ -19,6 +19,7 @@ export function getPathValue(
     let res : unknown | undefined;
     let temp = data;
     let index = 0;
+
     while (index < parts.length) {
         if (temp === null || typeof temp === 'undefined') {
             break;

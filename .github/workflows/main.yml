@@ -17,7 +17,7 @@ permissions:
     pull-requests: write
 
 env:
-    PRIMARY_NODE_VERSION: 22
+    PRIMARY_NODE_VERSION: 24
 
 jobs:
     install:
@@ -25,7 +25,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v6
             -   name: Install
                 uses: ./.github/actions/install
                 with:
@@ -37,7 +37,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v6
             -   name: Install
                 uses: ./.github/actions/install
                 with:
@@ -51,7 +51,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v6
             -   name: Install
                 uses: ./.github/actions/install
                 with:
@@ -65,7 +65,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v6
             -   name: Install
                 uses: ./.github/actions/install
                 with:
@@ -81,7 +81,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v6
             -   name: Install
                 uses: ./.github/actions/install
                 with:

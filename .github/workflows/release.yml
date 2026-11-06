@@ -8,7 +8,7 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
-    NODE_VERSION: 22
+    NODE_VERSION: 24
 
 permissions:
     packages: write
@@ -33,7 +33,7 @@ jobs:
 
             -   name: Checkout
                 if: steps.release.outputs.releases_created == 'true'
-                uses: actions/checkout@v4
+                uses: actions/checkout@v6
                 with:
                     fetch-depth: 0
 
