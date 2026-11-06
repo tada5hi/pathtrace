@@ -17,7 +17,8 @@ npm run test         # Vitest (npm run test:coverage enforces the 80% thresholds
 npm run lint         # ESLint (npm run lint:fix to auto-format)
 ```
 
-- **Node.js**: 22+
+- **Node.js (package runtime)**: 22+
+- **Node.js (development tooling)**: `^24.11.0 || >=26.0.0`; `.nvmrc` selects Node 24.
 - **Package manager**: npm
 
 ## Detailed Guides
