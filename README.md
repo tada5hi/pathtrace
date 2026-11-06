@@ -33,6 +33,22 @@ console.log(data.users[1]?.name); // Lin
 
 <img src="https://raw.githubusercontent.com/tada5hi/pathtrace/fe3b8ff02f6027361f97951b953f88662c75cca7/.github/assets/mechanism.svg" width="960" alt="expandPath(data, users.*.name) produces users[0].name and users[1].name. Pass each concrete path to getPathValue to read Ada and Lin. getPathValue itself does not expand wildcards.">
 
+**Table of Contents**
+
+- [Why pathtrace?](#why-pathtrace)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [getPathValue](#getpathvalue)
+  - [setPathValue](#setpathvalue)
+  - [expandPath](#expandpath)
+  - [getPathInfo](#getpathinfo)
+  - [removePath](#removepath)
+  - [Select many paths](#select-many-paths)
+  - [Inspect, remove and escape](#inspect-remove-and-escape)
+- [API](#api)
+- [Notes](#notes)
+- [License](#license)
+
 ## Installation
 
 ```sh
@@ -42,6 +58,362 @@ npm install pathtrace
 Requires Node.js 22 or newer. The package is ESM and includes TypeScript declarations.
 
 ## Usage
+The following examples demonstrate each operation. The getter, setter and introspection sections each define an `obj` fixture reused by their numbered examples. `Record<string, any>` allows the setter examples to add new properties; narrow values returned as `unknown` in application code.
+
+### getPathValue
+
+This method retrieves the value of a property at a given `path`
+inside an `object`.
+
+```typescript
+const obj: Record<string, any> = {
+    user: {
+        name: 'Alice',
+        roles: ['admin', 'editor'],
+        contact: {
+            email: 'alice@example.com',
+            phone: '123-456-7890',
+        },
+    },
+    settings: [
+        { theme: 'dark' },
+        { notifications: true },
+        [{ privacy: 'high' }]
+    ]
+};
+```
+
+**Example 1: Retrieving a simple property value**
+```typescript
+import { getPathValue } from 'pathtrace';
+
+var value = getPathValue(obj, 'user.name');
+console.log(value); // 'Alice'
+```
+
+**Example 2: Retrieving a nested property value**
+```typescript
+import { getPathValue } from 'pathtrace';
+
+var value = getPathValue(obj, 'user.contact.email');
+console.log(value); // 'alice@example.com'
+```
+
+**Example 3: Retrieving an array element by index**
+```typescript
+import { getPathValue } from 'pathtrace';
+
+var value = getPathValue(obj, 'user.roles[1]');
+console.log(value); // 'editor'
+```
+
+**Example 4: Retrieving a nested property within an array**
+```typescript
+import { getPathValue } from 'pathtrace';
+
+var value = getPathValue(obj, 'settings[1].notifications');
+console.log(value); // true
+```
+
+**Example 5: Retrieving a value from a multi-dimensional array**
+```typescript
+import { getPathValue } from 'pathtrace';
+
+var value = getPathValue(obj, 'settings[2][0].privacy');
+console.log(value); // 'high'
+```
+
+**Example 6: Handling undefined objects and properties**
+```typescript
+import { getPathValue } from 'pathtrace';
+
+var value = getPathValue(undefined, 'user.name');
+console.log(value); // undefined
+
+var value = getPathValue(obj, 'user.address');
+console.log(value); // undefined
+
+var value = getPathValue('hello', 'length');
+console.log(value); // 5
+```
+
+### setPathValue
+
+This method sets the `value` of a property at a given `path`
+inside an `object` and returns the object in which the property has been set.
+
+```typescript
+const obj: Record<string, any> = {
+    user: {
+        name: 'Alice',
+        roles: ['admin', 'editor'],
+        contact: {
+            email: 'alice@example.com',
+            phone: '123-456-7890',
+        },
+    },
+    settings: [
+        { theme: 'dark' },
+        { notifications: true },
+        [{ privacy: 'high' }]
+    ]
+};
+```
+
+**Example 1: Setting a simple property value**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'user.name', 'Bob');
+console.log(obj.user.name); // 'Bob'
+```
+
+**Example 2: Setting a nested property value**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'user.contact.email', 'bob@example.com');
+console.log(obj.user.contact.email); // 'bob@example.com'
+```
+
+**Example 3: Setting a nested array value**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'user.roles[1]', 'viewer');
+console.log(obj.user.roles[1]); // 'viewer'
+```
+
+**Example 4: Setting a value in an array**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'settings[2][0].privacy', 'low');
+console.log(obj.settings[2][0].privacy); // 'low'
+```
+
+**Example 5: Adding a new property to an object**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'user.contact.address', '123 Main St');
+console.log(obj.user.contact.address); // '123 Main St'
+```
+
+**Example 6: Setting a value in an object within an array**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'settings[1].notifications', false);
+console.log(obj.settings[1].notifications); // false
+```
+
+**Example 7: Creating a new array and setting values**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'user.history[0]', 'logged in');
+setPathValue(obj, 'user.history[2]', 'logged out');
+console.log(obj.user.history[0]); // 'logged in'
+console.log(obj.user.history[1]); // undefined
+console.log(obj.user.history[2]); // 'logged out'
+```
+
+**Example 8: Setting a value in a multi-dimensional array**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'settings[2][1]', { secure: true });
+console.log(obj.settings[2][1].secure); // true
+```
+
+**Example 9: Setting a value in an object inside an array**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+setPathValue(obj, 'settings[2][0].description', 'private settings');
+console.log(obj.settings[2][0].description); // 'private settings'
+```
+
+**Example 10: Returning the modified object**
+```typescript
+import { setPathValue } from 'pathtrace';
+
+var modifiedObj = setPathValue(obj, 'user.contact.phone', '987-654-3210');
+console.log(modifiedObj === obj); // true
+```
+
+### expandPath
+
+The expandPath function takes an object and a string representing a path,
+potentially containing wildcards (`*`) and globstars (`**`),
+and returns an array of all possible matching paths within the object.
+
+**Example: Wildcard (`*`) - Select all shallow paths of an array**
+```typescript
+import { expandPath } from 'pathtrace';
+
+const obj = {
+    foo: ['bar', 'baz'],
+};
+const paths = expandPath(obj, 'foo.*');
+console.log(paths); // ['foo[0]', 'foo[1]']
+```
+
+**Example: Wildcard (`*`) - Select matching paths under a wildcard branch**
+
+```typescript
+import { expandPath } from 'pathtrace';
+
+const obj = { foo: { bar: { a: true }, baz: { a: false, b: 1 } } };
+const paths = expandPath(obj, 'foo.*.a');
+console.log(paths); // ['foo.bar.a', 'foo.baz.a']
+```
+
+**Example: Globstar (`**`) - Select all leaves that match a leaf globstar**
+
+```typescript
+import { expandPath } from 'pathtrace';
+
+const obj = { foo: { a: { b: { c: 1 } }, d: { e: 2 } } };
+const paths = expandPath(obj, 'foo.**');
+console.log(paths); // ['foo.a.b.c', 'foo.d.e']
+```
+
+**Example: Globstar (`**`) - Select deeply nested matching paths under a globstar branch**
+
+```typescript
+import { expandPath } from 'pathtrace';
+
+const obj = { foo: { a: { b: { bar: 1 } }, c: { bar: 2 } } };
+const paths = expandPath(obj, 'foo.**.bar');
+console.log(paths); // ['foo.a.b.bar', 'foo.c.bar']
+```
+
+### getPathInfo
+
+This method returns an object with information indicating the value
+of the `parent` of that path, the `name` of the property being retrieved,
+and its `value`.
+
+```typescript
+const obj: Record<string, any> = {
+    user: {
+        name: 'Alice',
+        roles: ['admin', 'editor'],
+        contact: {
+            email: 'alice@example.com',
+            phone: '123-456-7890',
+        },
+    },
+    'user.roles': {
+        '[1]': 'editor',
+    },
+};
+```
+
+**Example 1: Handling a nested property**
+
+```typescript
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user.contact.email');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'contact'
+    console.log(info.parent.value);
+    // { email: 'alice@example.com', phone: '123-456-7890' }
+    console.log(info.parent.exists); // true
+}
+console.log(info.value); // 'alice@example.com'
+console.log(info.exists); // true
+console.log(info.name); // 'email'
+
+```
+**Example 2: Handling an array index**
+
+```typescript
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user.roles[1]');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'roles'
+    console.log(info.parent.value); // ['admin', 'editor']
+    console.log(info.parent.exists); // true
+}
+console.log(info.value); // 'editor'
+console.log(info.name); // 1
+console.log(info.exists); // true
+```
+
+**Example 3: Handling a non-existent property**
+```typescript
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user.contact.address');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'contact'
+    console.log(info.parent.value);
+    // { email: 'alice@example.com', phone: '123-456-7890' }
+    console.log(info.parent.exists); // true
+}
+console.log(info.value); // undefined
+console.log(info.name); // 'address'
+console.log(info.exists); // false
+```
+
+**Example 4: Handling an out-of-bounds array index**
+```typescript
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user.roles[5]');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'roles'
+    console.log(info.parent.value); // ['admin', 'editor']
+    console.log(info.parent.exists); // true
+}
+console.log(info.value); // undefined
+console.log(info.name); // 5
+console.log(info.exists); // false
+```
+
+**Example 5: Handling backslash-escaping for . and []**
+```typescript
+import { getPathInfo } from 'pathtrace';
+
+const info = getPathInfo(obj, 'user\\.roles.\\[1\\]');
+
+if (info.parent) {
+    console.log(info.parent.name); // 'user.roles'
+    console.log(info.parent.value); // { '[1]': 'editor' }
+    console.log(info.exists); // true
+}
+console.log(info.value); // 'editor'
+console.log(info.name); // '[1]'
+console.log(info.exists); // true
+```
+
+### removePath
+
+This method removes a property by a given `path`
+inside an `object`.
+
+```typescript
+import { removePath } from 'pathtrace';
+
+const obj = {
+    hello: 'universe',
+    foo: 'bar',
+};
+
+removePath(obj, 'foo');
+
+console.log(obj);
+// { hello: 'universe' }
+```
 
 ### Select many paths
 
