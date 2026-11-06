@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/tada5hi/pathtrace/b544e458a65d623d3d4d65e033712ed63346a152/.github/assets/logo.svg" width="144" height="144" alt="pathtrace logo">
+  <img src="https://raw.githubusercontent.com/tada5hi/pathtrace/fe3b8ff02f6027361f97951b953f88662c75cca7/.github/assets/logo.svg" width="144" height="144" alt="pathtrace logo">
   <h1>pathtrace</h1>
   <p><strong>Simplifies working with nested objects and arrays by providing easy methods to retrieve, set, and check values at any path.</strong></p>
   <p><a href="https://www.npmjs.com/package/pathtrace"><img src="https://img.shields.io/npm/v/pathtrace" alt="npm version"></a> <a href="https://github.com/tada5hi/pathtrace/actions/workflows/main.yml"><img src="https://github.com/tada5hi/pathtrace/actions/workflows/main.yml/badge.svg" alt="CI status"></a> <a href="LICENSE"><img src="https://img.shields.io/github/license/tada5hi/pathtrace" alt="License"></a></p>
@@ -31,7 +31,7 @@ setPathValue(data, 'users[1].name', 'Lin');
 console.log(data.users[1]?.name); // Lin
 ```
 
-<img src="https://raw.githubusercontent.com/tada5hi/pathtrace/b544e458a65d623d3d4d65e033712ed63346a152/.github/assets/mechanism.svg" width="960" alt="expandPath(data, users.*.name) produces users[0].name and users[1].name. Pass each concrete path to getPathValue to read Ada and Lin. getPathValue itself does not expand wildcards.">
+<img src="https://raw.githubusercontent.com/tada5hi/pathtrace/fe3b8ff02f6027361f97951b953f88662c75cca7/.github/assets/mechanism.svg" width="960" alt="expandPath(data, users.*.name) produces users[0].name and users[1].name. Pass each concrete path to getPathValue to read Ada and Lin. getPathValue itself does not expand wildcards.">
 
 ## Installation
 
