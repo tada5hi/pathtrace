@@ -31,7 +31,7 @@ setPathValue(data, 'users[1].name', 'Lin');
 console.log(data.users[1]?.name); // Lin
 ```
 
-<img src="https://raw.githubusercontent.com/tada5hi/pathtrace/fe3b8ff02f6027361f97951b953f88662c75cca7/.github/assets/mechanism.svg" width="960" alt="expandPath(data, users.*.name) produces users[0].name and users[1].name. Pass each concrete path to getPathValue to read Ada and Lin. getPathValue itself does not expand wildcards.">
+<img src="https://raw.githubusercontent.com/tada5hi/pathtrace/15f896974d516182d52af1643a6d2a8d6630b2cf/.github/assets/mechanism.svg" width="960" alt="expandPath(data, users.*.name) produces users[0].name and users[1].name. Pass each concrete path to getPathValue to read Ada and Lin. getPathValue itself does not expand wildcards.">
 
 **Table of Contents**
 
