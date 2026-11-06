@@ -58,12 +58,12 @@
         "@tada5hi/tsconfig": "^0.7.2",
         "@typescript-eslint/eslint-plugin": "^8.65.0",
         "@typescript-eslint/parser": "^8.65.0",
-        "@vitest/coverage-v8": "^4.1.10",
+        "@vitest/coverage-v8": "^4.1.12",
         "eslint": "^10.8.0",
         "husky": "^9.1.7",
         "tsdown": "^0.22.14",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.65.0",
-        "vitest": "^4.1.1"
+        "vitest": "^4.1.12"
     }
 }
