@@ -27,14 +27,8 @@ import { isUnsafeKey } from './is-unsafe-key';
  * @param key
  */
 export function hasOwnEntry(target: unknown, key: PropertyKey) : boolean {
-    if (isUnsafeKey(key)) {
-        return false;
-    }
-
-    if (
-        target === null ||
-        typeof target === 'undefined'
-    ) {
+    if (isUnsafeKey(key) || target === null ||
+        typeof target === 'undefined') {
         return false;
     }
 

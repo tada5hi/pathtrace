@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="pathtrace-b-title pathtrace-b-desc">
+<title id="pathtrace-b-title">pathtrace — The selected branch</title>
+<desc id="pathtrace-b-desc">A stepped object outline leads through nested keys to a selected leaf; an unselected sibling remains faint.</desc>
+<style>
+:root{--accent:#168c76;--second:#c98b22;--ink:#253447;--paper:#f7fafc;--line:#8394a7;--wash:#168c7618}
+@media(prefers-color-scheme:dark){:root{--ink:#e4ebf3;--paper:#182332;--line:#8495aa;--wash:#168c7622}}
+.a{stroke:var(--accent)}.b{stroke:var(--second)}.af{fill:var(--accent)}.bf{fill:var(--second)}.ink{fill:var(--ink)}.paper{stroke:var(--line)}.line{stroke:var(--line)}.wash{fill:var(--wash)}.white{fill:#fff}.neutral{fill:var(--paper)}
+</style>
+<path d="M38 62 H91 V112 H143 V165 H204" class="a" stroke-width="15" fill="none" stroke-linecap="round" stroke-linejoin="round" /><path d="M91 112 V191 H128 M143 165 V211 H169" class="line" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round" /><rect x="27" y="43" width="35" height="35" rx="5" class="af" /><rect x="73" y="94" width="36" height="36" rx="6" class="neutral" stroke="var(--accent)" stroke-width="7"/><rect x="125" y="147" width="36" height="36" rx="6" class="neutral" stroke="var(--accent)" stroke-width="7"/><path d="M207 143 L230 166 L207 189 L184 166 Z" class="b" stroke-width="4" fill="var(--second)" stroke-linecap="round" stroke-linejoin="round" /><circle cx="208" cy="166" r="5" class="white" />
+</svg>

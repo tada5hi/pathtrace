@@ -23,11 +23,13 @@ describe('getPathInfo', () => {
         expect.assertions(6);
 
         const info = getPathInfo(obj, 'dimensions.units');
+
         if (info.parent) {
             expect(info.parent.name).toEqual('dimensions');
             expect(info.parent.value).toEqual(obj.dimensions);
             expect(info.parent.exists).toBeTruthy();
         }
+
         expect(info.value).toEqual(obj.dimensions.units);
         expect(info.exists).toBeTruthy();
         expect(info.name).toEqual('units');
@@ -37,11 +39,13 @@ describe('getPathInfo', () => {
         expect.assertions(6);
 
         const info = getPathInfo(obj, 'dimensions.size');
+
         if (info.parent) {
             expect(info.parent.name).toEqual('dimensions');
             expect(info.parent.value).toEqual(obj.dimensions);
             expect(info.parent.exists).toBeTruthy();
         }
+
         expect(info.value).toBeUndefined();
         expect(info.name).toEqual('size');
         expect(info.exists).toBeFalsy();
@@ -51,11 +55,13 @@ describe('getPathInfo', () => {
         expect.assertions(6);
 
         const info = getPathInfo(obj, 'primes[2]');
+
         if (info.parent) {
             expect(info.parent.name).toEqual('primes');
             expect(info.parent.value).toEqual(obj.primes);
             expect(info.parent.exists).toBeTruthy();
         }
+
         expect(info.value).toEqual(obj.primes[2]);
         expect(info.name).toEqual(2);
         expect(info.exists).toBeTruthy();
@@ -65,11 +71,13 @@ describe('getPathInfo', () => {
         expect.assertions(6);
 
         const info = getPathInfo(obj, 'dimensions.lengths[2][1]');
+
         if (info.parent) {
             expect(info.parent.name).toEqual(2);
             expect(info.parent.value).toEqual(obj.dimensions.lengths[2]);
             expect(info.parent.exists).toBeTruthy();
         }
+
         expect(info.value).toEqual(obj.dimensions.lengths[2]?.[1]);
         expect(info.name).toEqual(1);
         expect(info.exists).toBeTruthy();
@@ -79,11 +87,13 @@ describe('getPathInfo', () => {
         expect.assertions(6);
 
         const info = getPathInfo(obj, 'dimensions.lengths[3]');
+
         if (info.parent) {
             expect(info.parent.name).toEqual('lengths');
             expect(info.parent.value).toEqual(obj.dimensions.lengths);
             expect(info.parent.exists).toBeTruthy();
         }
+
         expect(info.value).toEqual(undefined);
         expect(info.name).toEqual(3);
         expect(info.exists).toBeFalsy();
@@ -93,11 +103,13 @@ describe('getPathInfo', () => {
         expect.assertions(6);
 
         const info = getPathInfo(obj, 'dimensions.lengths[2][5]');
+
         if (info.parent) {
             expect(info.parent.name).toEqual(2);
             expect(info.parent.value).toEqual(obj.dimensions.lengths[2]);
             expect(info.parent.exists).toBeTruthy();
         }
+
         expect(info.value).toEqual(undefined);
         expect(info.name).toEqual(5);
         expect(info.exists).toBeFalsy();
@@ -107,11 +119,13 @@ describe('getPathInfo', () => {
         expect.assertions(6);
 
         const info = getPathInfo(obj, 'dimensions\\.lengths');
+
         if (info.parent) {
             expect(info.parent.name).toEqual(null);
             expect(info.parent.value).toEqual(obj);
             expect(info.parent.exists).toBeTruthy();
         }
+
         expect(info.value).toEqual(obj['dimensions.lengths']);
         expect(info.name).toEqual('dimensions.lengths');
         expect(info.exists).toBeTruthy();
@@ -121,11 +135,13 @@ describe('getPathInfo', () => {
         expect.assertions(6);
 
         const info = getPathInfo(obj, 'dimensions\\.lengths.\\[2\\][1]');
+
         if (info.parent) {
             expect(info.parent.name).toEqual('[2]');
             expect(info.parent.value).toEqual(obj['dimensions.lengths']['[2]']);
             expect(info.exists).toBeTruthy();
         }
+
         expect(info.value).toEqual(obj['dimensions.lengths']['[2]'][1]);
         expect(info.name).toEqual(1);
         expect(info.exists).toBeTruthy();
@@ -148,6 +164,7 @@ describe('getPathInfo', () => {
  */
 function withPrototypeAccessor(key: string, value: unknown, levels = 1) : object {
     let prototype : object = {};
+
     Object.defineProperty(prototype, key, {
         get: () => value,
         configurable: true,
@@ -263,6 +280,7 @@ describe('inherited members', () => {
         // A foreign Object.prototype stands in for another realm: comparing
         // prototype identity would miss it, the key-name rule does not.
         const foreignPrototype = Object.create(null);
+
         Object.defineProperty(foreignPrototype, 'toString', {
             value: () => 'x',
             configurable: true,

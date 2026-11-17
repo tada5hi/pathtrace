@@ -11,42 +11,49 @@ import { setPathValue } from '../../src';
 describe('setPathValue', () => {
     it('allows value to be set in simple object', () => {
         const obj : any = {};
+
         setPathValue(obj, 'hello', 'universe');
         expect(obj.hello).toEqual('universe');
     });
 
     it('allows nested object value to be set', () => {
         const obj : any = {};
+
         setPathValue(obj, 'hello.universe', 'properties');
         expect(obj.hello.universe).toEqual('properties');
     });
 
     it('allows nested array value to be set', () => {
         const obj : any = {};
+
         setPathValue(obj, 'hello.universe[1].properties', 'galaxy');
         expect(obj.hello.universe[1].properties).toEqual('galaxy');
     });
 
     it('allows value to be re-set in simple object', () => {
         const obj : any = { hello: 'world' };
+
         setPathValue(obj, 'hello', 'universe');
         expect(obj.hello).toEqual('universe');
     });
 
     it('allows value to be set in complex object', () => {
         const obj : any = { hello: {} };
+
         setPathValue(obj, 'hello.universe', 42);
         expect(obj.hello.universe).toEqual(42);
     });
 
     it('allows value to be re-set in complex object', () => {
         const obj = { hello: { universe: 100 } };
+
         setPathValue(obj, 'hello.universe', 42);
         expect(obj.hello.universe).toEqual(42);
     });
 
     it('allows for value to be set in array', () => {
         const obj = { hello: [] };
+
         setPathValue(obj, 'hello[0]', 1);
         setPathValue(obj, 'hello[2]', 3);
 
@@ -57,6 +64,7 @@ describe('setPathValue', () => {
 
     it('allows setting a value into an object inside an array', () => {
         const obj : any = { hello: [{ anObject: 'obj' }] };
+
         setPathValue(obj, 'hello[0].anotherKey', 'anotherValue');
 
         expect(obj.hello[0].anotherKey).toEqual('anotherValue');
@@ -64,6 +72,7 @@ describe('setPathValue', () => {
 
     it('allows for value to be re-set in array', () => {
         const obj = { hello: [1, 2, 4] };
+
         setPathValue(obj, 'hello[2]', 3);
 
         expect(obj.hello[0]).toEqual(1);
@@ -74,6 +83,7 @@ describe('setPathValue', () => {
     it('returns the object in which the value was set', () => {
         const obj = { hello: [1, 2, 4] };
         const valueReturned = setPathValue(obj, 'hello[2]', 3);
+
         expect(obj).toEqual(valueReturned);
     });
 });
@@ -86,6 +96,7 @@ describe('intermediate container kind', () => {
 
     it('creates an array when the next segment is numeric', () => {
         const obj: Record<string, any> = {};
+
         setPathValue(obj, 'items.0.name', 'x');
 
         expect(Array.isArray(obj.items)).toBe(true);
@@ -94,6 +105,7 @@ describe('intermediate container kind', () => {
 
     it('creates an array for bracket notation too', () => {
         const obj: Record<string, any> = {};
+
         setPathValue(obj, 'a[0].b', 1);
 
         expect(Array.isArray(obj.a)).toBe(true);
@@ -102,6 +114,7 @@ describe('intermediate container kind', () => {
 
     it('creates a plain object when the next segment is not numeric', () => {
         const obj: Record<string, any> = {};
+
         setPathValue(obj, 'a.b.c', 1);
 
         expect(Array.isArray(obj.a)).toBe(false);
@@ -114,6 +127,7 @@ describe('intermediate container kind', () => {
         // would hang `name` off it as a non-index property, which is exactly
         // the serialization loss this change exists to prevent.
         const obj: Record<string, any> = {};
+
         setPathValue(obj, 'items.01.name', 'V');
 
         expect(Array.isArray(obj.items)).toBe(false);
@@ -124,6 +138,7 @@ describe('intermediate container kind', () => {
     it('treats other non-canonical digit segments as object keys', () => {
         for (const segment of ['007', '4294967295', '99999999999999999999']) {
             const obj: Record<string, any> = {};
+
             setPathValue(obj, `items.${segment}.x`, 'V');
 
             expect(Array.isArray(obj.items)).toBe(false);
@@ -137,6 +152,7 @@ describe('intermediate container kind', () => {
         // resulting sparse array has length 2^32-1, so serializing or deeply
         // comparing it would be pathological.
         const obj: Record<string, any> = {};
+
         setPathValue(obj, 'items.4294967294.x', 'V');
 
         expect(Array.isArray(obj.items)).toBe(true);
@@ -149,6 +165,7 @@ describe('intermediate container kind', () => {
         // disappears at any serialization boundary (an API response body,
         // postMessage, IndexedDB) while still reading back in memory.
         const obj: Record<string, any> = {};
+
         setPathValue(obj, 'items.0.name', 'alpha');
 
         expect(JSON.parse(JSON.stringify(obj))).toEqual({ items: [{ name: 'alpha' }] });
@@ -157,6 +174,7 @@ describe('intermediate container kind', () => {
 
     it('keeps a deep mixed path structurally correct', () => {
         const obj: Record<string, any> = {};
+
         setPathValue(obj, 'a.0.b.1.c', 'deep');
 
         // The hole at `b[0]` serializes as null, per JSON semantics.
@@ -166,6 +184,7 @@ describe('intermediate container kind', () => {
 
     it('does not replace an existing object intermediate', () => {
         const obj: Record<string, any> = { a: { keep: 1 } };
+
         setPathValue(obj, 'a.b', 2);
 
         expect(obj).toEqual({
@@ -178,6 +197,7 @@ describe('intermediate container kind', () => {
 
     it('does not replace an existing array intermediate', () => {
         const obj: Record<string, any> = { a: [10, 20] };
+
         setPathValue(obj, 'a.0', 99);
 
         expect(Array.isArray(obj.a)).toBe(true);
@@ -193,6 +213,7 @@ describe('non-traversable intermediates', () => {
 
     it('replaces a null intermediate instead of dropping the write', () => {
         const obj: Record<string, any> = { a: null };
+
         setPathValue(obj, 'a.b', 1);
 
         expect(obj).toEqual({ a: { b: 1 } });
@@ -200,6 +221,7 @@ describe('non-traversable intermediates', () => {
 
     it('replaces a string intermediate', () => {
         const obj: Record<string, any> = { a: 'str' };
+
         setPathValue(obj, 'a.b', 1);
 
         expect(obj).toEqual({ a: { b: 1 } });
@@ -207,6 +229,7 @@ describe('non-traversable intermediates', () => {
 
     it('replaces a numeric intermediate', () => {
         const obj: Record<string, any> = { a: 0 };
+
         setPathValue(obj, 'a.b', 1);
 
         expect(obj).toEqual({ a: { b: 1 } });
@@ -214,6 +237,7 @@ describe('non-traversable intermediates', () => {
 
     it('replaces a null intermediate with an array when indexed numerically', () => {
         const obj: Record<string, any> = { a: null };
+
         setPathValue(obj, 'a.0', 'first');
 
         expect(Array.isArray(obj.a)).toBe(true);
@@ -222,6 +246,7 @@ describe('non-traversable intermediates', () => {
 
     it('still overwrites a primitive at the final segment', () => {
         const obj: Record<string, any> = { a: 'str' };
+
         setPathValue(obj, 'a', 'replaced');
 
         expect(obj).toEqual({ a: 'replaced' });
@@ -231,6 +256,7 @@ describe('non-traversable intermediates', () => {
 describe('avoid prototype pollution vulnerability', () => {
     it('exclude constructor', () => {
         const obj = {};
+
         expect(typeof obj.constructor).toEqual('function');
         setPathValue(obj, 'constructor', null);
         expect(typeof obj.constructor).toEqual('function');
@@ -238,6 +264,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
     it('exclude __proto__', () => {
         const obj : any = {};
+
         // eslint-disable-next-line no-proto
         expect(obj.__proto__).toEqual({});
         setPathValue(obj, '__proto__', true);
@@ -247,6 +274,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
     it('exclude prototype', () => {
         const obj : any = {};
+
         expect(obj.prototype).toBeUndefined();
         setPathValue(obj, 'prototype', true);
         expect(obj.prototype).toBeUndefined();
@@ -254,6 +282,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
     it('exclude __proto__ via array path', () => {
         const obj : Record<string, any> = {};
+
         setPathValue(obj, ['__proto__', 'polluted'], 'yes');
         expect(obj.polluted).toBeUndefined();
         expect((Object.prototype as any).polluted).toBeUndefined();
@@ -261,6 +290,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
     it('exclude __proto__ at non-first position via array path', () => {
         const obj : Record<string, any> = { a: {} };
+
         setPathValue(obj, ['a', '__proto__', 'polluted'], 'yes');
         expect(obj.a.polluted).toBeUndefined();
         expect((Object.prototype as any).polluted).toBeUndefined();
@@ -268,6 +298,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
     it('exclude constructor via array path', () => {
         const obj : Record<string, any> = {};
+
         setPathValue(obj, ['constructor', 'prototype', 'polluted'], 'yes');
         expect(obj.polluted).toBeUndefined();
         expect((Object.prototype as any).polluted).toBeUndefined();
@@ -275,6 +306,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
     it('exclude prototype via array path', () => {
         const obj : Record<string, any> = {};
+
         setPathValue(obj, ['prototype', 'polluted'], 'yes');
         expect(obj.polluted).toBeUndefined();
         expect((Object.prototype as any).polluted).toBeUndefined();

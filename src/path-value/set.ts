@@ -48,6 +48,7 @@ export function setPathValue(
 
     let temp = data;
     let index = 0;
+
     while (index < parts.length) {
         /* istanbul ignore next */
         if (!Array.isArray(temp) && !isObject(temp)) {
@@ -62,6 +63,7 @@ export function setPathValue(
 
         if (index === parts.length - 1) {
             temp[key] = value;
+
             break;
         }
 
@@ -74,6 +76,7 @@ export function setPathValue(
         // array at the index, with `b` hung off it as a non-index property,
         // which JSON.stringify and structuredClone both discard.
         const existing = temp[key];
+
         if (!isObject(existing) && !Array.isArray(existing)) {
             // Same "can this be descended into?" test the loop head uses.
             // Covers `undefined` (absent) as well as a pre-existing

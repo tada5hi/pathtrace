@@ -56,3 +56,5 @@ pathtrace/
 | `vitest` + `@vitest/coverage-v8` | Test runner and coverage |
 | `eslint` + `@tada5hi/eslint-config` | Linting |
 | `husky` + `@commitlint/cli` | Git hooks and commit message validation |
+
+README visuals live in `.github/assets/`: the approved logo and the source-based mechanism diagram.

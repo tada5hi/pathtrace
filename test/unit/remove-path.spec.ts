@@ -18,6 +18,7 @@ describe('removePath', () => {
         removePath(object, 'hello');
 
         const keys = Object.keys(object);
+
         expect(keys).toHaveLength(1);
         expect(keys).toEqual(['foo']);
     });
@@ -50,18 +51,21 @@ describe('removePath', () => {
 describe('avoid prototype pollution vulnerability', () => {
     it('exclude __proto__ via string path', () => {
         const obj : Record<string, any> = {};
+
         removePath(obj, '__proto__');
         expect(typeof obj.constructor).toEqual('function');
     });
 
     it('exclude constructor via string path', () => {
         const obj : Record<string, any> = {};
+
         removePath(obj, 'constructor');
         expect(typeof obj.constructor).toEqual('function');
     });
 
     it('exclude __proto__ via array path', () => {
         const obj : Record<string, any> = {};
+
         removePath(obj, ['__proto__', 'polluted']);
         expect(obj.polluted).toBeUndefined();
         expect((Object.prototype as any).polluted).toBeUndefined();
@@ -69,6 +73,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
     it('exclude __proto__ at non-first position via array path', () => {
         const obj : Record<string, any> = { a: {} };
+
         removePath(obj, ['a', '__proto__', 'toString']);
         expect(obj.a.toString).toBeDefined();
         expect((Object.prototype as any).toString).toBeDefined();
@@ -76,6 +81,7 @@ describe('avoid prototype pollution vulnerability', () => {
 
     it('exclude constructor via array path', () => {
         const obj : Record<string, any> = {};
+
         removePath(obj, ['constructor', 'prototype']);
         expect(typeof obj.constructor).toEqual('function');
         expect((Object.prototype as any).constructor).toBeDefined();
